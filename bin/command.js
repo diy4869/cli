@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-05-28 20:23:15
- * @LastEditTime: 2020-05-29 18:31:05
+ * @LastEditTime: 2020-06-05 10:09:28
  */
 
 const { Command } = require('commander')
@@ -16,7 +16,7 @@ const { checkDir } = require('../src/utils/utils')
 const fsPromise = fs.promises
 program.version(version, '-V, --version', '查看当前版本')
 program
-  .command('create')
+  .command('create <projectName>')
   .description('创建项目')
   .action(async source => {
     const projectName = source.args[0]
@@ -27,7 +27,7 @@ program
       console.log('文件夹已存在')
     }
   })
-  .option('-h, --help', '查看帮助')
+  // .option('-h, --help', '查看帮助')
 
 program.parse(process.argv)
 
