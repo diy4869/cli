@@ -20,8 +20,10 @@
   "lint-staged": {
     "*.{js,ts}": "eslint . --ext \".js,.ts\""
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "devDependencies": {
     "eslint": "7.2.0",
