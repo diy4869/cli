@@ -1,14 +1,13 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-06-06 15:19:28
+ * @LastEditTime: 2020-06-07 11:42:04
  */
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import path = require('path')
 import webpack = require('webpack')
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 import MiniCssExtractPlugin = require('mini-css-extract-plugin')
-import projectConfig from '../project.config'
 
 const config: webpack.Configuration = {
   mode: 'development',

@@ -1,10 +1,10 @@
 /*
  * @Author: last order
  * @Date: 2020-06-06 15:18:42
- * @LastEditTime: 2020-06-06 15:54:55
+ * @LastEditTime: 2020-06-07 11:43:26
  */
-import HtmlWebpackPlugin = require('html-webpack-plugin')
 import userWebpackConfig from 'project.config'
+import HtmlWebpackPlugin = require('html-webpack-plugin')
 
 export default {
   base () {

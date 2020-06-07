@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-02 10:02:02
- * @LastEditTime: 2020-06-06 14:27:03
+ * @LastEditTime: 2020-06-07 11:45:41
  */
 module.exports = {
   parser: '@typescript-eslint/parser',
@@ -13,6 +13,9 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended'
   ],
+  rules: {
+    '@typescript-eslint/explicit-module-boundary-types': 'off'
+  },
   env: {
     browser: true,
     node: true,
