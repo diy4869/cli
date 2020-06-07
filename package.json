@@ -4,7 +4,8 @@
   "description": "<!--\r  * @Author: last order\r  * @Date: 2020-05-29 19:11:29\r  * @LastEditTime: 2020-05-29 19:14:42\r --> \r ## cli",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext \".js,.ts\""
   },
   "repository": {
     "type": "git",
@@ -17,15 +18,13 @@
   },
   "homepage": "https://github.com/diy4869/cli#readme",
   "lint-staged": {
-    "*.{js,ts}": "npm run lint"
+    "*.{js,ts}": "eslint . --ext \".js,.ts\""
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "post-commit": "git update-index --again"
-    }
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   },
   "devDependencies": {
+    "eslint": "7.2.0",
     "husky": "^4.2.5",
     "lerna": "^3.22.0",
     "lint-staged": "^10.2.9"
