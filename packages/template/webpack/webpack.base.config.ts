@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-06-07 11:42:04
+ * @LastEditTime: 2020-06-08 13:59:59
  */
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import path = require('path')
@@ -103,8 +103,7 @@ const config: webpack.Configuration = {
     new MiniCssExtractPlugin({
       filename: 'assets/css/[name].[contentHash:8].css'
     }),
-    new CleanWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new CleanWebpackPlugin()
   ]
 }
 export default config

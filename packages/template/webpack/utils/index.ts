@@ -1,13 +1,22 @@
 /*
  * @Author: last order
  * @Date: 2020-06-06 15:18:42
- * @LastEditTime: 2020-06-07 11:43:26
+ * @LastEditTime: 2020-06-08 15:21:04
  */
 import userWebpackConfig from 'project.config'
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 
+interface BaseInterface {
+  pageKey: string[],
+  pages: string
+}
+
+interface WebpackEntry {
+  [propName: string]: string
+}
+
 export default {
-  base () {
+  base (): BaseInterface {
     const [pages] = Object.keys(userWebpackConfig)
     const pageKey = Object.keys(userWebpackConfig[pages])
 
@@ -16,7 +25,7 @@ export default {
       pages
     }
   },
-  entry () {
+  entry (): WebpackEntry {
     const { pages, pageKey } = this.base()
     const obj = {}
 
@@ -27,7 +36,7 @@ export default {
 
     return obj
   },
-  page () {
+  page (): HtmlWebpackPlugin[] {
     const { pages, pageKey } = this.base()
     const arr = []
     pageKey.forEach((page: string) => {
