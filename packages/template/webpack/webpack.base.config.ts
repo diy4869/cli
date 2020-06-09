@@ -1,16 +1,18 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-06-08 13:59:59
+ * @LastEditTime: 2020-06-09 13:54:55
  */
+import ENV from './env'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import path = require('path')
 import webpack = require('webpack')
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 import MiniCssExtractPlugin = require('mini-css-extract-plugin')
+import TerserPlugin = require('terser-webpack-plugin')
 
 const config: webpack.Configuration = {
-  mode: 'development',
+  mode: ENV,
   entry: path.join(__dirname, '../src/index.ts'),
   output: {
     path: path.join(__dirname, '../dist'),
@@ -57,16 +59,28 @@ const config: webpack.Configuration = {
         loader: 'file-loader'
       },
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         use: [
-          'eslint-loader',
+          {
+            loader: 'eslint-loader',
+            options: {
+              emitError: true,
+              failOnError: true
+            }
+          },
           'babel-loader'
         ]
       },
       {
         test: /\.(ts|tsx)$/,
         use: [
-          'eslint-loader',
+          {
+            loader: 'eslint-loader',
+            options: {
+              emitError: true,
+              failOnError: true
+            }
+          },
           'ts-loader'
         ]
       }
@@ -79,21 +93,25 @@ const config: webpack.Configuration = {
       '@': path.join(__dirname, '../src')
     }
   },
-  devServer: {
-    contentBase: path.join(__dirname, 'src'),
-    host: 'localhost',
-    port: 8000,
-    hot: true,
-    compress: true,
-    noInfo: true,
-    quiet: true,
-    overlay: {
-      warnings: true,
-      errors: false
-    },
-    clientLogLevel: 'none'
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          compress: {
+            drop_console: ENV === 'production',
+            drop_debugger: true
+          }
+        }
+      })
+    ]
   },
+  devtool: ENV === 'development' ? 'source-map' : false,
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(ENV)
+    }),
     new HtmlWebpackPlugin({
       title: 'hello world',
       filename: 'index.html',
