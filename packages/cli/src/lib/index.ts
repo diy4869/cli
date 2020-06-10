@@ -1,11 +1,11 @@
 /*
  * @Author: last order
  * @Date: 2020-05-28 20:26:08
- * @LastEditTime: 2020-06-04 20:02:15
+ * @LastEditTime: 2020-06-10 15:04:51
  */
-const ora = require('ora')
-const config = require('./config')
-const download = require('./download')
+import config from './config'
+import download from './download'
+import ora = require('ora')
 
 config.then(res => {
   console.log(res)
@@ -15,7 +15,7 @@ config.then(res => {
   })
 
   spinner.start()
-  download('diy4869/LoPlayer', '../test').then(res => {
+  download('diy4869/LoPlayer', '../test').then(() => {
     spinner.text = '模板下载成功'
     spinner.succeed()
   }).catch(() => {
@@ -25,4 +25,4 @@ config.then(res => {
   })
 })
 
-module.exports = config
+export default config

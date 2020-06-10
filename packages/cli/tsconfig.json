@@ -1,0 +1,21 @@
+{
+    "alwaysStrict": true,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "dist",
+        "module": "commonjs",
+        "target": "es5",
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

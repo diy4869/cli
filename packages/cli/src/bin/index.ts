@@ -1,19 +1,19 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node-script
 
 /*
  * @Author: last order
- * @Date: 2020-05-28 20:23:15
- * @LastEditTime: 2020-06-09 15:34:53
+ * @Date: 2020-05-28 20:17:05
+ * @LastEditTime: 2020-06-10 15:35:19
  */
+import { checkDirectory } from '../utils/utils'
+import { version } from '../../package.json'
+import { Command } from 'commander'
+import fs = require('fs')
+import path = require('path')
 
-const { Command } = require('commander')
 const program = new Command()
-const version = require('../../package.json').version
-const fs = require('fs')
-const path = require('path')
-const utils = require('../utils/utils')
 const fsPromise = fs.promises
-const { checkDirectory } = utils
+// const { checkDirectory } = utils
 
 program.version(version, '-V, --version', '查看当前版本')
 program
@@ -33,4 +33,4 @@ program
 
 program.parse(process.argv)
 
-module.exports = program
+export default program

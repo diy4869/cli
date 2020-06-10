@@ -1,18 +1,17 @@
 /*
  * @Author: last order
  * @Date: 2020-06-04 19:41:35
- * @LastEditTime: 2020-06-05 10:01:20
+ * @LastEditTime: 2020-06-10 14:43:50
  */
-const fs = require('fs')
-const path = require('path')
+import fs = require('fs')
+import path = require('path')
+
 const fsPromise = fs.promises
-// const checkDir = require('./checkDir')
 
 /**
- * @param {string} path 删除的文件或者文件夹
- * @returns {boolean} 是否成功
+ * @param {string} filePath 删除的文件或者文件夹
  */
-const Delete = (filePath) => {
+const Delete = (filePath: string): void => {
   fsPromise.stat(filePath).then(async res => {
     if (res.isDirectory()) {
       fsPromise.readdir(filePath, {
@@ -35,4 +34,4 @@ const Delete = (filePath) => {
 }
 Delete('../test')
 
-module.exports = Delete
+export default Delete

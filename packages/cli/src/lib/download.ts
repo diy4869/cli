@@ -1,14 +1,16 @@
 /*
  * @Author: last order
  * @Date: 2020-06-04 19:12:10
- * @LastEditTime: 2020-06-04 19:20:59
+ * @LastEditTime: 2020-06-10 14:33:22
  */
-const download = require('download-git-repo')
+import download from 'download-git-repo'
 
-module.exports = (url, path) => {
+const Download = (url: string, path: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     download(url, path, {}, err => {
       err ? reject(err) : resolve()
     })
   })
 }
+
+export default Download

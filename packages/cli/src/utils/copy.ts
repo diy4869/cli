@@ -1,14 +1,14 @@
 /*
  * @Author: last order
  * @Date: 2020-06-09 16:00:33
- * @LastEditTime: 2020-06-09 17:11:21
+ * @LastEditTime: 2020-06-10 14:59:21
  */
-const fs = require('fs')
-const fsPromise = fs.promises
-const utils = require('./utils')
-const { checkDirectory } = utils
+import { checkDirectory } from './utils'
+import fs = require('fs')
 
-const copy = (fromPath, toPath) => {
+const fsPromise = fs.promises
+
+export default (fromPath: string, toPath: string): void => {
   fsPromise.stat(fromPath).then(async res => {
     if (res.isDirectory()) {
       const checkDir = await checkDirectory(toPath)
@@ -32,5 +32,3 @@ const copy = (fromPath, toPath) => {
     }
   })
 }
-
-module.exports = copy
