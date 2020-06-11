@@ -1,5 +1,5 @@
 {
-  "name": "cli",
+  "name": "@cli/cli",
   "version": "1.0.0",
   "description": "",
   "main": "./src/bin/index.js",
@@ -32,6 +32,9 @@
     "ora": "^4.0.4",
     "semver": "^7.3.2",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "webpack": "^4.43.0",
+    "webpack-bundle-analyzer": "^3.8.0",
+    "webpack-merge": "^4.2.2"
   }
 }

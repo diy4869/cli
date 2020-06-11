@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-06 13:11:49
- * @LastEditTime: 2020-06-08 19:55:03
+ * @LastEditTime: 2020-06-10 18:26:12
  */
 import baseConfig from './webpack.base.config'
 import chalk from 'chalk'
@@ -10,6 +10,7 @@ import merge = require('webpack-merge')
 import address = require('address')
 import portFinder = require('portfinder')
 import path = require('path')
+import WebpackDevServer = require('webpack-dev-server')
 // import FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const getPort = async () => {
@@ -47,7 +48,7 @@ const devConfig = async (): Promise<webpack.Configuration> => {
 
   return merge(baseConfig, config)
 }
-const compiler = webpack(devConfig() as webpack.Configuration)
+const compiler = webpack(devConfig() as WebpackDevServer.Configuration)
 
 compiler.run(err => {
   if (err) console.log(err)
