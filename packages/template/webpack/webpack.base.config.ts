@@ -1,9 +1,11 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-06-12 15:01:12
+ * @LastEditTime: 2020-06-12 18:55:07
  */
 import ENV from './env'
+import getProjectConfig from './utils/getProjectConfig'
+import multiPage from './utils/index'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import path = require('path')
 import webpack = require('webpack')
@@ -11,9 +13,11 @@ import HtmlWebpackPlugin = require('html-webpack-plugin')
 import MiniCssExtractPlugin = require('mini-css-extract-plugin')
 import TerserPlugin = require('terser-webpack-plugin')
 
+const userWebpackConfig = () => getProjectConfig()
+
 const config: webpack.Configuration = {
   mode: ENV,
-  entry: {
+  entry: userWebpackConfig().pages ? multiPage.entry() : {
     index: [
       'webpack-dev-server/client',
       'webpack/hot/only-dev-server',
@@ -22,7 +26,7 @@ const config: webpack.Configuration = {
   },
   output: {
     path: path.join(__dirname, '../dist'),
-    filename: '[name].js'
+    filename: '[name].[hash:8].js'
   },
   module: {
     rules: [
@@ -115,16 +119,28 @@ const config: webpack.Configuration = {
   },
   devtool: ENV === 'development' ? 'source-map' : false,
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'hello world',
-      filename: 'index.html',
-      inject: true,
-      template: path.join(__dirname, '../src/page/index.html')
-    }),
     new MiniCssExtractPlugin({
       filename: 'assets/css/[name].[contentHash:8].css'
     }),
     new CleanWebpackPlugin()
   ]
 }
+
+if (!userWebpackConfig()?.pages) {
+  config.plugins = [
+    ...config.plugins,
+    new HtmlWebpackPlugin({
+      title: 'hello world',
+      filename: 'index.html',
+      inject: true,
+      template: path.join(__dirname, '../src/page/index.html')
+    })
+  ]
+} else {
+  config.plugins = [
+    ...config.plugins,
+    ...multiPage.page()
+  ]
+}
+
 export default config

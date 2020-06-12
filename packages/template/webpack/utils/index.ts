@@ -1,9 +1,9 @@
 /*
  * @Author: last order
  * @Date: 2020-06-06 15:18:42
- * @LastEditTime: 2020-06-08 15:21:04
+ * @LastEditTime: 2020-06-12 18:43:03
  */
-import userWebpackConfig from 'project.config'
+import getProjectConfig from './getProjectConfig'
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 
 interface BaseInterface {
@@ -14,8 +14,9 @@ interface BaseInterface {
 interface WebpackEntry {
   [propName: string]: string
 }
+const userWebpackConfig = () => getProjectConfig()
 
-export default {
+const multiPage = {
   base (): BaseInterface {
     const [pages] = Object.keys(userWebpackConfig)
     const pageKey = Object.keys(userWebpackConfig[pages])
@@ -56,3 +57,5 @@ export default {
     return arr
   }
 }
+
+export default multiPage

@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-06 12:59:54
- * @LastEditTime: 2020-06-09 13:53:28
+ * @LastEditTime: 2020-06-12 18:05:28
  */
 import webpack = require('webpack')
 import WebpackDevServer = require('webpack-dev-server')
@@ -50,5 +50,3 @@ interface TerserOptions {
   dropConsole?: boolean,
   dropDebugger?: boolean
 }
-
-export default ProjectConfig

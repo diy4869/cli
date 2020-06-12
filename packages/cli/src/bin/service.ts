@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-10 14:22:58
- * @LastEditTime: 2020-06-12 15:22:34
+ * @LastEditTime: 2020-06-12 18:44:44
  */
 import { buildMode, report, server, getPort } from '../utils/webpackUtils'
 import { HOST } from '../config/index'
@@ -35,7 +35,10 @@ program
     const config = merge(webpackBaseConfig, {
       mode: buildMode(program.mode),
       plugins: [
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin({
+          multiStep: true,
+          fullBuildTimeout: 200
+        }),
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(program.mode)
         })
@@ -68,12 +71,13 @@ program
     const compiler = webpack(config)
 
     compiler.run((err, stats) => {
+      console.clear()
       if (err || stats.hasErrors()) {
         // eslint-disable-next-line no-irregular-whitespace
         console.log(`${chalk.bgRed(`${chalk.black(' ERROR ')}`)}　编译出错\n`)
         console.log(err)
+        console.log(stats.compilation.errors[0])
       } else {
-        console.clear()
         // eslint-disable-next-line no-irregular-whitespace
         console.log(`${chalk.bgGreen(`${chalk.black(' DONE ')}`)}　编译完成\n`)
         const log = stats.toString({
