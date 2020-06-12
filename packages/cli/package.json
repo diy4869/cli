@@ -2,7 +2,7 @@
   "name": "@cli/cli",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/bin/index.js",
+  "main": "src/bin/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext \".js,.ts\" --fix"

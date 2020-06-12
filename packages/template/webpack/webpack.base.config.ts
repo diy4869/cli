@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-06-09 13:54:55
+ * @LastEditTime: 2020-06-12 15:01:12
  */
 import ENV from './env'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
@@ -13,7 +13,13 @@ import TerserPlugin = require('terser-webpack-plugin')
 
 const config: webpack.Configuration = {
   mode: ENV,
-  entry: path.join(__dirname, '../src/index.ts'),
+  entry: {
+    index: [
+      'webpack-dev-server/client',
+      'webpack/hot/only-dev-server',
+      path.join(__dirname, '../src/index.ts')
+    ]
+  },
   output: {
     path: path.join(__dirname, '../dist'),
     filename: '[name].js'
@@ -109,9 +115,6 @@ const config: webpack.Configuration = {
   },
   devtool: ENV === 'development' ? 'source-map' : false,
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(ENV)
-    }),
     new HtmlWebpackPlugin({
       title: 'hello world',
       filename: 'index.html',
