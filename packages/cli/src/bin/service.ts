@@ -3,11 +3,12 @@
 /*
  * @Author: last order
  * @Date: 2020-06-10 14:22:58
- * @LastEditTime: 2020-06-12 18:44:44
+ * @LastEditTime: 2020-06-15 14:53:38
  */
 import { buildMode, report, server, getPort } from '../utils/webpackUtils'
 import { HOST } from '../config/index'
 import { Command } from 'commander'
+import getProjectConfig from '@cli/template/webpack/utils/getProjectConfig'
 import webpackBaseConfig from '@cli/template/webpack/webpack.base.config'
 import webpackProdConfig from '@cli/template/webpack/webpack.prod.config'
 import { version } from '../../package.json'
@@ -15,6 +16,8 @@ import webpack = require('webpack')
 import merge = require('webpack-merge')
 import chalk = require('chalk')
 import address = require('address')
+
+const userWebpackConfig = () => getProjectConfig()
 
 const program = new Command()
 
@@ -45,9 +48,15 @@ program
       ]
     })
     if (program.report) report(config, program.report)
-    const compiler = webpack(config)
+    console.log(config)
+    const userWebpack = merge(
+      config,
+      userWebpackConfig()?.configWebpack.call(null, config, process.env.NODE_ENV)
+    )
+    const compiler = webpack(userWebpack)
     const devServer = server(compiler)
     const PORT = await getPort()
+    console.log(compiler.options)
     ;(await devServer).listen(PORT, HOST, err => {
       if (err) return console.log(err)
       log(PORT)
@@ -66,9 +75,12 @@ program
         })
       ]
     })
-    console.log(program.report)
     if (program.report) report(config, program.report)
-    const compiler = webpack(config)
+    const userWebpack = merge(
+      config,
+      userWebpackConfig()?.configWebpack.call(null, config, process.env.NODE_ENV)
+    )
+    const compiler = webpack(userWebpack)
 
     compiler.run((err, stats) => {
       console.clear()
