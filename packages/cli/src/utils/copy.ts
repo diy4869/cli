@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-09 16:00:33
- * @LastEditTime: 2020-06-18 15:30:03
+ * @LastEditTime: 2020-06-18 16:08:24
  */
 import checkDirectory from './checkDirectory'
 import fs = require('fs')
@@ -9,6 +9,11 @@ import path = require('path')
 
 const fsPromise = fs.promises
 
+/**
+ * @desc 复制文件
+ * @param {string} fromPath 复制的文件或文件夹
+ * @param {string} toPath 如果toPath既不是文件也不是文件夹将会直接被重命名
+ */
 const copy = (fromPath: string, toPath: string): Promise<boolean> => {
   // 检测文件是否存在
   const checkFile = (path: string): Promise<boolean> => {
@@ -24,7 +29,6 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
     })
   }
 
-  // 复制文件
   const copyFile = (fromPath: string, toPath: string): Promise<boolean> => {
     return new Promise(resolve => {
       fsPromise.stat(fromPath).then(async stat => {

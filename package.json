@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "cli",
+  "name": "@lo/cli",
   "version": "1.0.0",
   "description": "<!--\r  * @Author: last order\r  * @Date: 2020-05-29 19:11:29\r  * @LastEditTime: 2020-05-29 19:14:42\r --> \r ## cli",
   "main": "index.js",
