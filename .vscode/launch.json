@@ -7,11 +7,14 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "启动程序",
-            "skipFiles": [
-                "<node_internals>/**"
+            "name": "Launch Program",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register"
             ],
-            "program": "${file}"
+            "args": [
+                "${file}"
+            ]
         }
     ]
 }

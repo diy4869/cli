@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-10 14:22:58
- * @LastEditTime: 2020-06-15 14:53:38
+ * @LastEditTime: 2020-06-15 16:53:31
  */
 import { buildMode, report, server, getPort } from '../utils/webpackUtils'
 import { HOST } from '../config/index'
@@ -17,10 +17,8 @@ import merge = require('webpack-merge')
 import chalk = require('chalk')
 import address = require('address')
 
-const userWebpackConfig = () => getProjectConfig()
-
 const program = new Command()
-
+const userWebpackConfig = () => getProjectConfig()
 const log = (PORT: number): void => {
   console.clear()
   // eslint-disable-next-line no-irregular-whitespace

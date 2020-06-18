@@ -1,11 +1,12 @@
 <!--
  * @Author: last order
  * @Date: 2020-05-29 19:11:29
- * @LastEditTime: 2020-06-09 17:57:45
+ * @LastEditTime: 2020-06-15 16:42:46
 --> 
 ## cli
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![cli](https://img.shields.io/github/package-json/v/diy4869/cli)](https://github.com/diy4869/cli)
 
 一个简单的cli，只提供基本的html、css、js、ts、scss支持，不支持vue、react、angular等任意框架，但是你可以通过对其进行扩展从而让他支持。就是这样，目前还只是个demo。
 
