@@ -1,13 +1,14 @@
 /*
  * @Author: last order
  * @Date: 2020-06-11 14:24:07
- * @LastEditTime: 2020-06-12 16:39:29
+ * @LastEditTime: 2020-06-19 16:29:20
  */
 import { HOST, PORT } from '../config/index'
 import webpack = require('webpack')
 import WebpackDevServer = require('webpack-dev-server')
 import portFinder = require('portfinder')
 import BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+import path = require('path')
 
 export const buildMode = (mode: string): string => {
   const str = ['test', 'development', 'production', 'preProduction'].find(item => mode === item)
@@ -42,6 +43,7 @@ export const server = async (compiler: webpack.Compiler): Promise<WebpackDevServ
   const devServer = new WebpackDevServer(compiler, {
     host: HOST,
     port: port,
+    contentBase: path.resolve(__dirname, 'src'),
     hot: true,
     hotOnly: true,
     compress: true,
@@ -52,7 +54,7 @@ export const server = async (compiler: webpack.Compiler): Promise<WebpackDevServ
       errors: true
     },
     open: false,
-    useLocalIp: true,
+    // useLocalIp: true,
     clientLogLevel: 'none'
   })
 

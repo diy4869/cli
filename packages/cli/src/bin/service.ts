@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-10 14:22:58
- * @LastEditTime: 2020-06-19 11:41:10
+ * @LastEditTime: 2020-06-19 16:43:03
  */
 import { buildMode, report, server, getPort } from '../utils/webpackUtils'
 import { HOST } from '../config/index'
@@ -17,12 +17,10 @@ import merge = require('webpack-merge')
 import chalk = require('chalk')
 import address = require('address')
 
-console.log(process.argv)
-
 const program = new Command()
 const userWebpackConfig = () => getProjectConfig()
 const log = (PORT: number): void => {
-  console.clear()
+  // console.clear()
   // eslint-disable-next-line no-irregular-whitespace
   console.log(`${chalk.bgGreen(`${chalk.black(' DONE ')}`)}　服务启动完成\n\n`)
   console.log('  项目启动成功，地址是:\n')
@@ -31,19 +29,25 @@ const log = (PORT: number): void => {
   if (program.report) console.log(`  - Report:  ${chalk.cyan('http://127.0.0.1:8888')}`)
 }
 
+const defaultMode = () => {
+  const args = process.argv
+  if (args.includes('dev')) {
+    return 'development'
+  } else if (args.includes('build')) {
+    return 'production'
+  }
+}
+
 program
   .command('dev [args...]')
   .description('启动服务')
   .action(async () => {
-    const config = merge(webpackBaseConfig, {
+    const config = merge(webpackBaseConfig(program.mode), {
       mode: buildMode(program.mode),
       plugins: [
         new webpack.HotModuleReplacementPlugin({
           multiStep: true,
           fullBuildTimeout: 200
-        }),
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify(program.mode)
         })
       ]
     })
@@ -52,10 +56,10 @@ program
       config,
       userWebpackConfig()?.configWebpack?.call(null, config, process.env.NODE_ENV)
     )
+    console.log(config)
     const compiler = webpack(userWebpack)
     const devServer = server(compiler)
     const PORT = await getPort()
-    console.log(compiler.options)
     ;(await devServer).listen(PORT, HOST, err => {
       if (err) return console.log(err)
       log(PORT)
@@ -66,21 +70,17 @@ program
   .command('build [args...]')
   .description('开始打包')
   .action(async () => {
-    const config = merge(webpackProdConfig, {
-      mode: buildMode(program.mode),
-      plugins: [
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify(program.mode)
-        })
-      ]
+    const config = merge(webpackProdConfig(), {
+      mode: buildMode(program.mode)
     })
+
     if (program.report) report(config, program.report)
     const userWebpack = merge(
       config,
       userWebpackConfig()?.configWebpack?.call(null, config, process.env.NODE_ENV)
     )
     const compiler = webpack(userWebpack)
-
+    console.log(compiler.options)
     compiler.run((err, stats) => {
       if (err || stats.hasErrors()) {
         // eslint-disable-next-line no-irregular-whitespace
@@ -109,14 +109,7 @@ program
 program
   .version(version, '-V, --version', '查看当前版本')
   .option('-h, --help', '查看帮助')
-  .option('--mode [type]', '构建环境 development production test preProduction 共4种', () => {
-    const args = program.argv
-    if (args.include('dev')) {
-      return 'development'
-    } else if (args.includes('build')) {
-      return 'production'
-    }
-  })
+  .option('--mode [type]', '构建环境 development production test preProduction 共4种', defaultMode())
   .option('--report', '开启日志分析', false)
 
 program.parse(process.argv)
