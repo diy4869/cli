@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-09 16:00:33
- * @LastEditTime: 2020-06-18 16:08:24
+ * @LastEditTime: 2020-06-19 13:39:54
  */
 import checkDirectory from './checkDirectory'
 import fs = require('fs')
@@ -15,6 +15,9 @@ const fsPromise = fs.promises
  * @param {string} toPath 如果toPath既不是文件也不是文件夹将会直接被重命名
  */
 const copy = (fromPath: string, toPath: string): Promise<boolean> => {
+  const from = path.resolve(fromPath)
+  const to = path.resolve(toPath)
+
   // 检测文件是否存在
   const checkFile = (path: string): Promise<boolean> => {
     return new Promise(resolve => {
@@ -29,6 +32,7 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
     })
   }
 
+  // 复制文件
   const copyFile = (fromPath: string, toPath: string): Promise<boolean> => {
     return new Promise(resolve => {
       fsPromise.stat(fromPath).then(async stat => {
@@ -41,7 +45,6 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
               const substr = resolvePath.substr(start + 1, fromPath.length)
               await fsPromise.copyFile(resolvePath, path.resolve(toPath, substr))
             } else {
-              console.log(toPath)
               await fsPromise.copyFile(fromPath, toPath)
             }
           }
@@ -51,23 +54,42 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
     })
   }
 
+  // 复制文件夹
+  const copyDirectory = async (fromPath: string, toPath: string): Promise<boolean> => {
+    return new Promise(resolve => {
+      fsPromise.stat(fromPath).then(async stats => {
+        if (stats.isDirectory()) {
+          if (!await checkDirectory(toPath)) {
+            fs.mkdirSync(toPath)
+          }
+          const filePath = fs.readdirSync(fromPath)
+          filePath.map(async file => {
+            const startPath = fromPath + '/' + file
+            const endPath = toPath + '/' + file
+            fsPromise.stat(startPath).then(async res => {
+              res.isFile() ? await copyFile(startPath, endPath) : await copyDirectory(startPath, endPath)
+            })
+          })
+          resolve(true)
+        }
+      })
+    })
+  }
+
   // 复制
   return new Promise(resolve => {
-    fsPromise.stat(fromPath).then(async res => {
+    fsPromise.stat(from).then(async res => {
       if (res.isDirectory()) {
-        const filePath = fs.readdirSync(fromPath)
-        if (!await checkDirectory(toPath)) {
-          fs.mkdirSync(toPath)
+        if (!await checkDirectory(to)) {
+          fs.mkdirSync(to)
+          copyDirectory(from, to)
+        } else {
+          const start = from.lastIndexOf('\\')
+          const substr = from.substr(start + 1, from.length)
+          await copyDirectory(from, path.resolve(to, substr))
         }
-        filePath.map(async file => {
-          const startPath = fromPath + '/' + file
-          const endPath = toPath + '/' + file
-          fsPromise.stat(startPath).then(async res => {
-            res.isFile() ? await copyFile(startPath, endPath) : await copy(startPath, endPath)
-          })
-        })
       } else {
-        await copyFile(fromPath, toPath)
+        await copyFile(from, to)
       }
     })
     resolve(true)

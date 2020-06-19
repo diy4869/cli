@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-10 14:22:58
- * @LastEditTime: 2020-06-15 16:53:31
+ * @LastEditTime: 2020-06-19 11:41:10
  */
 import { buildMode, report, server, getPort } from '../utils/webpackUtils'
 import { HOST } from '../config/index'
@@ -16,6 +16,8 @@ import webpack = require('webpack')
 import merge = require('webpack-merge')
 import chalk = require('chalk')
 import address = require('address')
+
+console.log(process.argv)
 
 const program = new Command()
 const userWebpackConfig = () => getProjectConfig()
@@ -46,10 +48,9 @@ program
       ]
     })
     if (program.report) report(config, program.report)
-    console.log(config)
     const userWebpack = merge(
       config,
-      userWebpackConfig()?.configWebpack.call(null, config, process.env.NODE_ENV)
+      userWebpackConfig()?.configWebpack?.call(null, config, process.env.NODE_ENV)
     )
     const compiler = webpack(userWebpack)
     const devServer = server(compiler)
@@ -76,12 +77,11 @@ program
     if (program.report) report(config, program.report)
     const userWebpack = merge(
       config,
-      userWebpackConfig()?.configWebpack.call(null, config, process.env.NODE_ENV)
+      userWebpackConfig()?.configWebpack?.call(null, config, process.env.NODE_ENV)
     )
     const compiler = webpack(userWebpack)
 
     compiler.run((err, stats) => {
-      console.clear()
       if (err || stats.hasErrors()) {
         // eslint-disable-next-line no-irregular-whitespace
         console.log(`${chalk.bgRed(`${chalk.black(' ERROR ')}`)}　编译出错\n`)
@@ -109,7 +109,14 @@ program
 program
   .version(version, '-V, --version', '查看当前版本')
   .option('-h, --help', '查看帮助')
-  .option('--mode [type]', '构建环境 development production test preProduction 共4种', 'development')
+  .option('--mode [type]', '构建环境 development production test preProduction 共4种', () => {
+    const args = program.argv
+    if (args.include('dev')) {
+      return 'development'
+    } else if (args.includes('build')) {
+      return 'production'
+    }
+  })
   .option('--report', '开启日志分析', false)
 
 program.parse(process.argv)

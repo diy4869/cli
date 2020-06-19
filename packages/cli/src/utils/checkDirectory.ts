@@ -1,12 +1,13 @@
 /*
  * @Author: last order
  * @Date: 2020-06-04 19:39:25
- * @LastEditTime: 2020-06-16 10:47:23
+ * @LastEditTime: 2020-06-19 11:56:16
  */
 import fs = require('fs')
 
 /**
  * @param { string } path 文件路径
+ * @description 检查文件夹是否存在
  */
 export default async (path: string): Promise<boolean> => {
   return new Promise(resolve => {

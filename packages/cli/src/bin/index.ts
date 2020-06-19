@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-05-28 20:17:05
- * @LastEditTime: 2020-06-18 17:21:54
+ * @LastEditTime: 2020-06-19 13:41:19
  */
 import { checkDirectory } from '../utils'
 import * as templatePackge from '../template/package.json'
@@ -40,17 +40,18 @@ program
     Package.name = projectName
     fs.writeFileSync(`${projectPath}/package.json`, JSON.stringify(Package, null, 2))
     fileList.map(async file => {
-      const exclude = ['webpack', 'node_modules', 'yarn.lock', 'package-lock.json', 'project.config.ts']
+      const exclude = ['webpack', 'node_modules', 'yarn.lock', 'package.json', 'package-lock.json', 'project.config.ts']
       const result = exclude.find(item => item === file)
       if (!result) {
-        await copy(path.join(templatePath, file), projectPath)
+        const template = path.resolve(templatePath, file)
+        await copy(template, projectPath)
       }
     })
     setTimeout(() => {
       spinner.text = ' 项目创建成功\n'
       spinner.succeed()
-      console.log(`  - ${chalk.cyan('npm install')}`)
       console.log(`  - ${chalk.cyan(`cd ${projectName}`)}`)
+      console.log(`  - ${chalk.cyan('npm install')}`)
       console.log(`  - ${chalk.cyan('npm run dev')}`)
     }, 4000)
   })
