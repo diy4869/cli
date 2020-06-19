@@ -1,15 +1,15 @@
 /*
  * @Author: last order
  * @Date: 2020-06-06 12:59:54
- * @LastEditTime: 2020-06-12 18:05:28
+ * @LastEditTime: 2020-06-19 17:03:11
  */
 import webpack = require('webpack')
 import WebpackDevServer = require('webpack-dev-server')
 
-export class ProjectConfig {
+export default class ProjectConfig {
   publicPath?: string = '/'
   pages?: PagesInterface
-  devServer?: devServerConfig = {
+  devServer?: WebpackDevServer.Configuration = {
     overlay: {
       warnings: false,
       errors: true
@@ -25,13 +25,6 @@ export class ProjectConfig {
   configWebpack?(config?: webpack.Configuration): webpack.Configuration
 }
 
-interface devServerConfig {
-  overlay?: boolean | {
-    warnings?: boolean;
-    errors?: boolean;
-  }
-  proxy?: WebpackDevServer.ProxyConfigMap | WebpackDevServer.ProxyConfigArray,
-}
 interface PagesConfig {
   filename: string,
   template: string,
