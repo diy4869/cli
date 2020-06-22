@@ -1,9 +1,11 @@
 /*
  * @Author: last order
  * @Date: 2020-06-09 16:00:33
- * @LastEditTime: 2020-06-19 13:39:54
+ * @LastEditTime: 2020-06-22 17:02:44
  */
 import checkDirectory from './checkDirectory'
+import checkFile from './checkFile'
+import mkdir from './mkdir'
 import fs = require('fs')
 import path = require('path')
 
@@ -18,34 +20,26 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
   const from = path.resolve(fromPath)
   const to = path.resolve(toPath)
 
-  // 检测文件是否存在
-  const checkFile = (path: string): Promise<boolean> => {
-    return new Promise(resolve => {
-      fs.stat(path, (err, stats) => {
-        if (err) {
-          resolve(false)
-        } else {
-          const res = stats.isFile()
-          res ? resolve(true) : resolve(false)
-        }
-      })
-    })
-  }
-
   // 复制文件
   const copyFile = (fromPath: string, toPath: string): Promise<boolean> => {
     return new Promise(resolve => {
       fsPromise.stat(fromPath).then(async stat => {
+        const resolvePath = path.resolve(fromPath)
+        const start = resolvePath.lastIndexOf(path.sep)
+        const substr = resolvePath.substr(start + 1, fromPath.length)
+
         if (stat?.isFile()) {
           if (!await checkFile(toPath)) {
             // 如果toPath是文件夹就截取fromPath的文件名，然后在拷贝，否则直接拷贝
             if (await checkDirectory(toPath)) {
-              const resolvePath = path.resolve(fromPath)
-              const start = resolvePath.lastIndexOf('\\')
-              const substr = resolvePath.substr(start + 1, fromPath.length)
               await fsPromise.copyFile(resolvePath, path.resolve(toPath, substr))
             } else {
-              await fsPromise.copyFile(fromPath, toPath)
+              // 文件夹不存在，就创建文件夹
+              if (await mkdir(toPath)) {
+                await fsPromise.copyFile(resolvePath, path.resolve(toPath, substr))
+              } else {
+                await fsPromise.copyFile(resolvePath, toPath)
+              }
             }
           }
         }
@@ -64,8 +58,8 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
           }
           const filePath = fs.readdirSync(fromPath)
           filePath.map(async file => {
-            const startPath = fromPath + '/' + file
-            const endPath = toPath + '/' + file
+            const startPath = fromPath + path.sep + file
+            const endPath = toPath + path.sep + file
             fsPromise.stat(startPath).then(async res => {
               res.isFile() ? await copyFile(startPath, endPath) : await copyDirectory(startPath, endPath)
             })
@@ -84,7 +78,7 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
           fs.mkdirSync(to)
           copyDirectory(from, to)
         } else {
-          const start = from.lastIndexOf('\\')
+          const start = from.lastIndexOf(path.sep)
           const substr = from.substr(start + 1, from.length)
           await copyDirectory(from, path.resolve(to, substr))
         }
