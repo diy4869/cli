@@ -1,12 +1,12 @@
 /*
  * @Author: last order
  * @Date: 2020-06-06 12:59:54
- * @LastEditTime: 2020-06-19 17:03:11
+ * @LastEditTime: 2020-06-19 17:34:31
  */
 import webpack = require('webpack')
 import WebpackDevServer = require('webpack-dev-server')
 
-export default class ProjectConfig {
+export class ProjectConfig {
   publicPath?: string = '/'
   pages?: PagesInterface
   devServer?: WebpackDevServer.Configuration = {

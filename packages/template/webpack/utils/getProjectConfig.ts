@@ -1,9 +1,9 @@
 /*
  * @Author: last order
  * @Date: 2020-06-12 17:37:03
- * @LastEditTime: 2020-06-19 17:03:31
+ * @LastEditTime: 2020-06-12 18:47:37
  */
-import userWebpackConfig from '../../project.config'
+import { ProjectConfig as userWebpackConfig } from '../../project.config'
 import fs = require('fs')
 import path = require('path')
 
