@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-10 14:22:58
- * @LastEditTime: 2020-06-19 16:43:03
+ * @LastEditTime: 2020-07-20 16:56:25
  */
 import { buildMode, report, server, getPort } from '../utils/webpackUtils'
 import { HOST } from '../config/index'
@@ -18,9 +18,10 @@ import chalk = require('chalk')
 import address = require('address')
 
 const program = new Command()
-const userWebpackConfig = () => getProjectConfig()
+const userWebpackConfig = getProjectConfig()
+
 const log = (PORT: number): void => {
-  // console.clear()
+  console.clear()
   // eslint-disable-next-line no-irregular-whitespace
   console.log(`${chalk.bgGreen(`${chalk.black(' DONE ')}`)}　服务启动完成\n\n`)
   console.log('  项目启动成功，地址是:\n')
@@ -48,21 +49,24 @@ program
         new webpack.HotModuleReplacementPlugin({
           multiStep: true,
           fullBuildTimeout: 200
-        })
+        }),
+        new webpack.ProgressPlugin()
       ]
     })
     if (program.report) report(config, program.report)
     const userWebpack = merge(
       config,
-      userWebpackConfig()?.configWebpack?.call(null, config, process.env.NODE_ENV)
+      userWebpackConfig?.configWebpack?.call(null, config, process.env.NODE_ENV)
     )
-    console.log(config)
+
     const compiler = webpack(userWebpack)
     const devServer = server(compiler)
     const PORT = await getPort()
-    ;(await devServer).listen(PORT, HOST, err => {
-      if (err) return console.log(err)
-      log(PORT)
+    compiler.hooks.done.tapAsync('done', async () => {
+      await (await devServer).listen(PORT, HOST, err => {
+        if (err) return console.log(err)
+        log(PORT)
+      })
     })
   })
 
@@ -77,7 +81,7 @@ program
     if (program.report) report(config, program.report)
     const userWebpack = merge(
       config,
-      userWebpackConfig()?.configWebpack?.call(null, config, process.env.NODE_ENV)
+      userWebpackConfig?.configWebpack?.call(null, config, process.env.NODE_ENV)
     )
     const compiler = webpack(userWebpack)
     console.log(compiler.options)
