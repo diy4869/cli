@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-11 14:24:07
- * @LastEditTime: 2020-07-20 16:44:40
+ * @LastEditTime: 2020-07-22 17:50:29
  */
 import { HOST, PORT } from '../config/index'
 import webpack = require('webpack')
@@ -49,12 +49,13 @@ export const server = async (compiler: webpack.Compiler): Promise<WebpackDevServ
     compress: true,
     noInfo: true,
     quiet: true,
+    watchContentBase: true,
     overlay: {
       warnings: false,
       errors: true
     },
     open: false,
-    // useLocalIp: true,
+    useLocalIp: true,
     clientLogLevel: 'none'
   })
 

@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-06-19 17:36:39
+ * @LastEditTime: 2020-07-22 17:04:16
  */
 import getProjectConfig from './utils/getProjectConfig'
 import multiPage from './utils/index'
@@ -21,8 +21,8 @@ export default (ENV?: ENV_TYPE): webpack.Configuration => {
     mode: ENV,
     entry: userWebpackConfig().pages ? multiPage.entry() : {
       index: [
-        'webpack-dev-server/client',
-        'webpack/hot/only-dev-server',
+        // 'webpack-dev-server/client',
+        // 'webpack/hot/only-dev-server',
         path.join(__dirname, '../src/index.ts')
       ]
     },

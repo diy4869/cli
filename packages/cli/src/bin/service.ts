@@ -3,7 +3,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-10 14:22:58
- * @LastEditTime: 2020-07-20 16:56:25
+ * @LastEditTime: 2020-07-22 17:57:19
  */
 import { buildMode, report, server, getPort } from '../utils/webpackUtils'
 import { HOST } from '../config/index'
@@ -62,11 +62,20 @@ program
     const compiler = webpack(userWebpack)
     const devServer = server(compiler)
     const PORT = await getPort()
-    compiler.hooks.done.tapAsync('done', async () => {
-      await (await devServer).listen(PORT, HOST, err => {
-        if (err) return console.log(err)
-        log(PORT)
-      })
+    compiler.watch({
+      aggregateTimeout: 300, // 构建前的延迟，默认300
+      poll: undefined,
+      ignored: /node_modules/
+    }, (_, stats) => {
+      console.log(stats)
+    })
+    await (await devServer).listen(PORT, HOST, err => {
+      if (err) return console.log(err)
+      log(PORT)
+    })
+    compiler.hooks.compilation.tap('compilation', () => {
+      console.log('产生了新的编译')
+      log(PORT)
     })
   })
 
