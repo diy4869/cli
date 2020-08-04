@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-11 14:24:07
- * @LastEditTime: 2020-07-22 17:50:29
+ * @LastEditTime: 2020-07-30 14:11:28
  */
 import { HOST, PORT } from '../config/index'
 import webpack = require('webpack')
@@ -43,7 +43,7 @@ export const server = async (compiler: webpack.Compiler): Promise<WebpackDevServ
   const devServer = new WebpackDevServer(compiler, {
     host: HOST,
     port: port,
-    contentBase: path.resolve(__dirname, 'src'),
+    contentBase: 'src',
     hot: true,
     hotOnly: true,
     compress: true,

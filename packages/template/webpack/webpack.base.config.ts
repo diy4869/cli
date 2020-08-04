@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-07-22 17:04:16
+ * @LastEditTime: 2020-07-30 14:15:17
  */
 import getProjectConfig from './utils/getProjectConfig'
 import multiPage from './utils/index'
@@ -19,23 +19,13 @@ type ENV_TYPE = 'development' | 'production'
 export default (ENV?: ENV_TYPE): webpack.Configuration => {
   const config: webpack.Configuration = {
     mode: ENV,
-    entry: userWebpackConfig().pages ? multiPage.entry() : {
-      index: [
-        // 'webpack-dev-server/client',
-        // 'webpack/hot/only-dev-server',
-        path.join(__dirname, '../src/index.ts')
-      ]
-    },
+    entry: userWebpackConfig().pages ? multiPage.entry() : '../src/index.ts',
     output: {
       path: path.join(__dirname, '../dist'),
       filename: '[name].[hash:8].js'
     },
     module: {
       rules: [
-        // {
-        //   test: /\.html$/,
-        //   use: 'html-loader'
-        // },
         {
           test: /\.css$/,
           use: [
@@ -103,7 +93,7 @@ export default (ENV?: ENV_TYPE): webpack.Configuration => {
       ]
     },
     resolve: {
-      enforceExtension: false,
+      // enforceExtension: false,
       extensions: ['.js', '.ts'],
       alias: {
         '@': path.join(__dirname, '../src')
@@ -131,32 +121,25 @@ export default (ENV?: ENV_TYPE): webpack.Configuration => {
       new MiniCssExtractPlugin({
         filename: 'assets/css/[name].[contentHash:8].css'
       }),
-      new HtmlWebpackPlugin({
-        // title: 'hello world',
-        filename: 'index.html',
-        inject: true,
-        template: path.join(__dirname, '../src/page/index.html')
-      }),
       new CleanWebpackPlugin()
     ]
   }
 
-  // if (!userWebpackConfig()?.pages) {
-  //   config.plugins = [
-  //     ...config.plugins,
-  //     new HtmlWebpackPlugin({
-  //       title: 'hello world',
-  //       filename: 'index.html',
-  //       inject: true,
-  //       template: path.join(__dirname, '../src/page/index.html')
-  //     })
-  //   ]
-  // } else {
-  //   config.plugins = [
-  //     ...config.plugins,
-  //     ...multiPage.page()
-  //   ]
-  // }
+  if (!userWebpackConfig()?.pages) {
+    config.plugins = [
+      ...config.plugins,
+      new HtmlWebpackPlugin({
+        filename: 'index.html',
+        inject: true,
+        template: path.join(__dirname, '../src/page/index.html')
+      })
+    ]
+  } else {
+    config.plugins = [
+      ...config.plugins,
+      ...multiPage.page()
+    ]
+  }
 
   return config
 }

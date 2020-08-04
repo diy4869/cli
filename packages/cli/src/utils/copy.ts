@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-09 16:00:33
- * @LastEditTime: 2020-06-22 17:02:44
+ * @LastEditTime: 2020-07-30 14:05:09
  */
 import checkDirectory from './checkDirectory'
 import checkFile from './checkFile'
@@ -34,12 +34,7 @@ const copy = (fromPath: string, toPath: string): Promise<boolean> => {
             if (await checkDirectory(toPath)) {
               await fsPromise.copyFile(resolvePath, path.resolve(toPath, substr))
             } else {
-              // 文件夹不存在，就创建文件夹
-              if (await mkdir(toPath)) {
-                await fsPromise.copyFile(resolvePath, path.resolve(toPath, substr))
-              } else {
-                await fsPromise.copyFile(resolvePath, toPath)
-              }
+              await fsPromise.copyFile(resolvePath, toPath)
             }
           }
         }
