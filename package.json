@@ -1,11 +1,5 @@
 {
   "private": true,
-  "name": "@diy4869/cli",
-  "version": "1.0.0-alpha.0",
-  "description": "cli",
-  "author": "last order",
-  "license": "ISC",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext \".js,.ts\""
