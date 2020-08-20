@@ -1,6 +1,6 @@
 {
-  "name": "@cli/cli",
-  "version": "1.0.2",
+  "name": "@diy4869_cli/cli",
+  "version": "1.0.0-alpha.0",
   "description": "",
   "main": "src/bin/index.ts",
   "scripts": {
@@ -39,5 +39,5 @@
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-merge": "^4.2.2"
   },
-  "gitHead": "3154820397aec5f377f9edf9e56d28b07c318980"
+  "gitHead": "8c6d5c94252ea9b6581cffe27a893bb3f7899620"
 }
