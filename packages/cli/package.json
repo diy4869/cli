@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^4.0.0",
     "commander": "^5.1.0",
@@ -39,5 +39,5 @@
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-merge": "^4.2.2"
   },
-  "gitHead": "8c6d5c94252ea9b6581cffe27a893bb3f7899620"
+  "gitHead": "a3b2a9793fcc47be76150b3e9ac1bf7c53383fe4"
 }
