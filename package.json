@@ -20,13 +20,16 @@
       "pre-commit": "lint-staged"
     }
   },
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
-    "eslint": "7.2.0",
+    "eslint": "^7.7.0",
     "husky": "^4.2.5",
     "lerna": "^3.22.0",
-    "lint-staged": "^10.2.9"
+    "lint-staged": "^10.2.11"
   }
 }
