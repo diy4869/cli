@@ -7,8 +7,7 @@
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack/webpack.dev.config.ts",
     "build": "cross-env NODE_ENV=production webpack --progress --config webpack/webpack.prod.config.ts",
     "lint": "eslint . --ext \".js,.ts\"",
-    "lint:fix": "eslint . --fix --ext \".js,.ts\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:fix": "eslint . --fix --ext \".js,.ts\""
   },
   "keywords": [],
   "author": "",
