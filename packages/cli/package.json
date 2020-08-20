@@ -1,6 +1,6 @@
 {
   "name": "@diy4869_cli/cli",
-  "version": "1.0.3",
+  "version": "1.0.1-alpha.0",
   "description": "",
   "main": "src/bin/index.ts",
   "scripts": {
