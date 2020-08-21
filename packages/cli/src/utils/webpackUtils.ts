@@ -8,7 +8,7 @@ import webpack = require('webpack')
 import WebpackDevServer = require('webpack-dev-server')
 import portFinder = require('portfinder')
 import BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-import path = require('path')
+// import path = require('path')
 
 export const buildMode = (mode: string): string => {
   const str = ['test', 'development', 'production', 'preProduction'].find(item => mode === item)

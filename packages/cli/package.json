@@ -1,5 +1,5 @@
 {
-  "name": "@diy4869_cli/cli",
+  "name": "@lo_cli/core",
   "version": "1.0.1-alpha.0",
   "description": "",
   "main": "src/bin/index.ts",
@@ -16,9 +16,9 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.0.0",
-    "commander": "^5.1.0",
-    "inquirer": "^7.1.0",
-    "ora": "^4.0.4"
+    "commander": "^6.0.0",
+    "inquirer": "^7.3.3",
+    "ora": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^14.0.13",

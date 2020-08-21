@@ -5,7 +5,7 @@
  */
 import checkDirectory from './checkDirectory'
 import checkFile from './checkFile'
-import mkdir from './mkdir'
+// import mkdir from './mkdir'
 import fs = require('fs')
 import path = require('path')
 
