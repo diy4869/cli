@@ -18,7 +18,7 @@ type ENV_TYPE = 'development' | 'production'
 
 export default (ENV?: ENV_TYPE): webpack.Configuration => {
   const config: webpack.Configuration = {
-    mode: ENV,
+    mode: ENV || 'development',
     entry: userWebpackConfig().pages ? multiPage.entry() : '../src/index.ts',
     output: {
       path: path.join(__dirname, '../dist'),

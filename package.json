@@ -30,6 +30,7 @@
     "eslint": "^7.7.0",
     "husky": "^4.2.5",
     "lerna": "^3.22.0",
-    "lint-staged": "^10.2.11"
+    "lint-staged": "^10.2.11",
+    "vue-loader": "^15.9.3"
   }
 }

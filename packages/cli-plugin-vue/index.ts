@@ -1,17 +1,21 @@
-import { API } from '../types'
 import config from './config/index'
+import VueLoaderPlguin = require('vue-loader/lib/index')
 
-export default class {
-  API: API;
-  constructor (API) {
-    this.API = API
+export default async (webpackConfig) => {
+  const result = await config()
 
-    this.init()
+  const webpackVueConfig = {
+    module: {
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
+        }
+      ]
+    },
+    plugins: [
+      new VueLoaderPlguin.VueLoaderPlugin()
+    ]
   }
-
-  init () {
-    config.then(res => {
-      console.log(res)
-    })
-  }
+  return webpackVueConfig
 }
