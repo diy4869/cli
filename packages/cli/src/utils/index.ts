@@ -7,12 +7,14 @@ import checkDirectory from './checkDirectory'
 import mkdir from './mkdir'
 import copy from './copy'
 import Delete from './delete'
+import render from './render'
 import path = require('path')
 
 export const resolveDir = (dir: string): string => path.resolve(__dirname, dir)
 
 export {
   checkDirectory,
+  render,
   copy,
   mkdir,
   Delete

@@ -1,4 +1,5 @@
 import devConfig from '../../../template/webpack/webpack.base.config'
+import { render } from '../utils/index'
 import merge = require('webpack-merge')
 import webpack = require('webpack')
 
@@ -28,7 +29,10 @@ export default class Plugins {
 
     const config = devConfig('development')
     if (res) {
-      const VueTemplateConfig = await res.apply.call(null, config)
+      const VueTemplateConfig = await res.apply.call(null, {
+        config,
+        render
+      })
       const result = merge(config, VueTemplateConfig)
 
       return result

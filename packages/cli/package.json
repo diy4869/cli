@@ -17,6 +17,7 @@
   "dependencies": {
     "chalk": "^4.0.0",
     "commander": "^6.0.0",
+    "ejs": "^3.1.5",
     "inquirer": "^7.3.3",
     "ora": "^5.0.0"
   },
