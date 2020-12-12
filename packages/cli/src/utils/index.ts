@@ -9,9 +9,13 @@ import copy from './copy'
 import Delete from './delete'
 import render from './render'
 import path = require('path')
+import { Command } from 'commander'
+import getProjectConfig from '../../../template/webpack/utils/getProjectConfig'
 
+export const userWebpackConfig = getProjectConfig()
+export * from './webpackUtils'
+export const program = new Command()
 export const resolveDir = (dir: string): string => path.resolve(__dirname, dir)
-
 export {
   checkDirectory,
   render,

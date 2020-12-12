@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name": "otaku-cli",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext \".js,.ts\""
@@ -27,10 +28,10 @@
     "packages/*"
   ],
   "devDependencies": {
-    "eslint": "^7.7.0",
-    "husky": "^4.2.5",
+    "eslint": "^7.15.0",
+    "husky": "^4.3.5",
     "lerna": "^3.22.0",
-    "lint-staged": "^10.2.11",
-    "vue-loader": "^15.9.3"
+    "lint-staged": "^10.5.3",
+    "vue-loader": "^15.9.5"
   }
 }

@@ -6,7 +6,6 @@
 </template>
 
 <script>
-<% if (!useVue3) { %>
 export default {
   name: 'App',
   data () {
@@ -23,26 +22,6 @@ export default {
     }
   }
 }
-<% } else { %>
-import { reactive, setup } from 'vue'
-export default {
-  setup () {
-    const count = reactive(0)
-    const increment = () => {
-      count++
-    }
-    const decrement = () => {
-      count++
-    }
-    return {
-      count,
-      increment,
-      decrement
-    }
-  }
-}
-<% } %>
 </script>
-
 <style scoped>
 </style>

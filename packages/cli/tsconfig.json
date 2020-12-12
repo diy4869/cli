@@ -4,11 +4,13 @@
         "baseUrl": ".",
         "outDir": "dist",
         "module": "commonjs",
-        "target": "es5",
         "sourceMap": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "paths": {
+            "@lo-cli/template": [
+                "../template/*"
+            ],
             "@/*": [
                 "./src/*"
             ]

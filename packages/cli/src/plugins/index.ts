@@ -1,15 +1,19 @@
 import devConfig from '../../../template/webpack/webpack.base.config'
 import { render } from '../utils/index'
-import merge = require('webpack-merge')
+import { merge } from 'webpack-merge'
 import webpack = require('webpack')
+
+interface API {
+  config: webpack.Configuration
+}
 
 interface PluginOptions {
   name: string,
-  apply(config: webpack.Configuration): webpack.Configuration | Promise<webpack.Configuration>
+  apply(api: API): Promise<webpack.Configuration>
 }
 
 export default class Plugins {
-  plugins: PluginOptions[]
+  plugins: Array<PluginOptions>
 
   constructor () {
     this.plugins = []
@@ -26,13 +30,15 @@ export default class Plugins {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   async call (name: string) {
     const res = this.plugins.find(item => item.name === name)
-
     const config = devConfig('development')
+
     if (res) {
-      const VueTemplateConfig = await res.apply.call(null, {
+      const api = {
         config,
         render
-      })
+      }
+
+      const VueTemplateConfig = await res.apply.call(null, api)
       const result = merge(config, VueTemplateConfig)
 
       return result

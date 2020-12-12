@@ -11,12 +11,12 @@ import webpack = require('webpack')
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 import MiniCssExtractPlugin = require('mini-css-extract-plugin')
 import TerserPlugin = require('terser-webpack-plugin')
-
+const VueLoaderPlguin = require('vue-loader/dist/plugin').default
 const userWebpackConfig = () => getProjectConfig()
 
-type ENV_TYPE = 'development' | 'production'
+type NODE_ENV = 'development' | 'production'
 
-export default (ENV?: ENV_TYPE): webpack.Configuration => {
+export default (ENV?: NODE_ENV): webpack.Configuration => {
   const config: webpack.Configuration = {
     mode: ENV || 'development',
     entry: userWebpackConfig().pages ? multiPage.entry() : '../src/index.ts',
@@ -89,14 +89,18 @@ export default (ENV?: ENV_TYPE): webpack.Configuration => {
             },
             'ts-loader'
           ]
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
         }
       ]
     },
     resolve: {
-      // enforceExtension: false,
-      extensions: ['.js', '.ts'],
+      extensions: ['.js', '.ts', '.vue'],
       alias: {
-        '@': path.join(__dirname, '../src')
+        '@': path.join(__dirname, '../src'),
+        '~': path.join(__dirname, '../src/assets')
       }
     },
     optimization: {
@@ -115,6 +119,7 @@ export default (ENV?: ENV_TYPE): webpack.Configuration => {
     },
     devtool: ENV === 'development' ? 'source-map' : 'hidden-source-map',
     plugins: [
+      new VueLoaderPlguin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(ENV)
       }),

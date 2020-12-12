@@ -22,19 +22,6 @@ export default () => {
       message: '选择预处理器'
     },
     {
-      type: 'list',
-      name: 'mobile',
-      message: '选择终端',
-      choices: [
-        {
-          name: 'mobile'
-        },
-        {
-          name: 'pc'
-        }
-      ]
-    },
-    {
       type: 'confirm',
       name: 'useVue3',
       message: '是否使用Vue3'

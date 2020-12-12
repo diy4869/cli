@@ -5,7 +5,7 @@
  */
 import baseConfig from './webpack.base.config'
 import webpack = require('webpack')
-import merge = require('webpack-merge')
+import { merge } from 'webpack-merge'
 import OptimizationCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 import ProgressBarPlugin = require('progress-bar-webpack-plugin')
 import SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
