@@ -8,9 +8,9 @@ import mkdir from './mkdir'
 import copy from './copy'
 import Delete from './delete'
 import render from './render'
-import path = require('path')
 import { Command } from 'commander'
 import getProjectConfig from '../../../template/webpack/utils/getProjectConfig'
+import path = require('path')
 
 export const userWebpackConfig = getProjectConfig()
 export * from './webpackUtils'

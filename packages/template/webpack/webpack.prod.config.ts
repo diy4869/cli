@@ -4,11 +4,12 @@
  * @LastEditTime: 2020-07-20 15:13:27
  */
 import baseConfig from './webpack.base.config'
-import webpack = require('webpack')
 import { merge } from 'webpack-merge'
+import webpack = require('webpack')
 import OptimizationCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-import ProgressBarPlugin = require('progress-bar-webpack-plugin')
 import SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+
+const WebpackBar = require('webpackbar')
 
 export default (): webpack.Configuration => {
   const smp = new SpeedMeasurePlugin()
@@ -21,14 +22,14 @@ export default (): webpack.Configuration => {
         assetNameRegExp: /\.css$/g,
         cssProcessor: require('cssnano')
       }),
-      new ProgressBarPlugin()
+      new WebpackBar({
+        name: 'Build'
+      })
     ]
   }
 
-  return smp.wrap(
-    merge(
-      baseConfig(),
-      config
-    )
+  return merge(
+    baseConfig(),
+    config
   )
 }

@@ -5,7 +5,7 @@
 // import ora = require('ora')
 // import chalk = require('chalk')
 import Plugins from '../../plugins/index'
-import VueTemplate from 'cli-plugin-vue/index'
+import VueTemplate from 'cli-plugin-vue/src/index'
 
 export default async (): Promise<void> => {
   // eslint-disable-next-line no-new

@@ -11,18 +11,19 @@ import webpack = require('webpack')
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 import MiniCssExtractPlugin = require('mini-css-extract-plugin')
 import TerserPlugin = require('terser-webpack-plugin')
-const VueLoaderPlguin = require('vue-loader/dist/plugin').default
 const userWebpackConfig = () => getProjectConfig()
 
-type NODE_ENV = 'development' | 'production'
+type WEBPACK_ENV = 'development' | 'production'
 
-export default (ENV?: NODE_ENV): webpack.Configuration => {
+console.log(userWebpackConfig().pages ? multiPage.entry() : '../src/index.ts')
+console.log(path.resolve(__dirname, '../src'))
+export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
   const config: webpack.Configuration = {
     mode: ENV || 'development',
-    entry: userWebpackConfig().pages ? multiPage.entry() : '../src/index.ts',
+    entry: userWebpackConfig().pages ? multiPage.entry() : path.resolve(__dirname, '../src/index.ts'),
     output: {
-      path: path.join(__dirname, '../dist'),
-      filename: '[name].[hash:8].js'
+      path: path.resolve(__dirname, '../dist'),
+      filename: '[name].[fullhash:8].js'
     },
     module: {
       rules: [
@@ -89,18 +90,14 @@ export default (ENV?: NODE_ENV): webpack.Configuration => {
             },
             'ts-loader'
           ]
-        },
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader'
         }
       ]
     },
     resolve: {
-      extensions: ['.js', '.ts', '.vue'],
+      extensions: ['.js', '.ts'],
       alias: {
-        '@': path.join(__dirname, '../src'),
-        '~': path.join(__dirname, '../src/assets')
+        '@': path.resolve(__dirname, '../src'),
+        '~': path.resolve(__dirname, '../src/assets')
       }
     },
     optimization: {
@@ -119,7 +116,6 @@ export default (ENV?: NODE_ENV): webpack.Configuration => {
     },
     devtool: ENV === 'development' ? 'source-map' : 'hidden-source-map',
     plugins: [
-      new VueLoaderPlguin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(ENV)
       }),
@@ -136,7 +132,7 @@ export default (ENV?: NODE_ENV): webpack.Configuration => {
       new HtmlWebpackPlugin({
         filename: 'index.html',
         inject: true,
-        template: path.join(__dirname, '../src/page/index.html')
+        template: path.resolve(__dirname, '../src/page/index.html')
       })
     ]
   } else {

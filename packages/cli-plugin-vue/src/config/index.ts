@@ -30,6 +30,21 @@ export default () => {
       type: 'confirm',
       name: 'useTypeScript',
       message: '是否使用TypeScript'
+    },
+    {
+      type: 'list',
+      name: 'packageManger',
+      choices: [
+        {
+          name: 'npm'
+        },
+        {
+          name: 'yarn'
+        },
+        {
+          name: 'cnpm'
+        }
+      ]
     }
   ])
 }

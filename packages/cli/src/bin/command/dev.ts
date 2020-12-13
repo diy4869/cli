@@ -1,7 +1,6 @@
 
 import { buildMode, report, server, getPort, program, userWebpackConfig } from '../../utils'
 import webpackBaseConfig from '@lo_cli/template/webpack/webpack.base.config'
-// import s from '@lo-cli/template/'
 import { HOST } from '../../config'
 import { merge } from 'webpack-merge'
 import webpack = require('webpack')
@@ -30,20 +29,13 @@ export default async function (): Promise<void> {
   })
   if (program.report) report(config, program.report)
   const userWebpack = merge(
-    config,
-    userWebpackConfig?.configWebpack?.call(null, config, process.env.NODE_ENV)
+    config
+    // userWebpackConfig?.configWebpack?.call(userWebpackConfig.configWebpack, config, process.env.NODE_ENV)
   )
-
+  console.log(userWebpack)
   const compiler = webpack(userWebpack)
   const devServer = server(compiler)
   const PORT = await getPort()
-  compiler.watch({
-    aggregateTimeout: 300, // 构建前的延迟，默认300
-    poll: undefined,
-    ignored: /node_modules/
-  }, (_, stats) => {
-    console.log(stats)
-  })
   await (await devServer).listen(PORT, HOST, err => {
     if (err) return console.log(err)
     log(PORT)

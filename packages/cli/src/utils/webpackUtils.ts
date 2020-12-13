@@ -38,11 +38,10 @@ export const getPort = async (): Promise<number> => {
   return result
 }
 
-export const server = async (compiler: webpack.Compiler): Promise<WebpackDevServer> => {
-  const port = await getPort() as unknown as number
+export const server = async (compiler: webpack.Compiler, PORT = 8080): Promise<WebpackDevServer> => {
   const devServer = new WebpackDevServer(compiler, {
     host: HOST,
-    port: port,
+    port: PORT,
     contentBase: 'src',
     hot: true,
     hotOnly: true,
@@ -55,7 +54,7 @@ export const server = async (compiler: webpack.Compiler): Promise<WebpackDevServ
       errors: true
     },
     open: false,
-    useLocalIp: true,
+    useLocalIp: false,
     clientLogLevel: 'none'
   })
 

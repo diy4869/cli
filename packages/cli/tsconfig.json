@@ -8,9 +8,6 @@
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "paths": {
-            "@lo-cli/template": [
-                "../template/*"
-            ],
             "@/*": [
                 "./src/*"
             ]

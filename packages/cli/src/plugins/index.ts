@@ -1,16 +1,7 @@
-import devConfig from '../../../template/webpack/webpack.base.config'
+import devConfig from '@lo_cli/template/webpack/webpack.base.config'
 import { render } from '../utils/index'
 import { merge } from 'webpack-merge'
-import webpack = require('webpack')
-
-interface API {
-  config: webpack.Configuration
-}
-
-interface PluginOptions {
-  name: string,
-  apply(api: API): Promise<webpack.Configuration>
-}
+import { PluginOptions } from '../types'
 
 export default class Plugins {
   plugins: Array<PluginOptions>

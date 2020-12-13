@@ -1,8 +1,10 @@
 import generatorOptions from './config/index'
 import path = require('path')
-
+import { API } from '@lo_cli/core/src/types'
+import webpack = require('webpack')
 console.log(234234)
-export default async function (api) {
+
+export default async function VueTemplate (api: API): Promise<webpack.Configuration> {
   const options = await generatorOptions()
   console.log(options)
   const template = {
@@ -31,8 +33,12 @@ export default async function (api) {
       }
     }
   }
-  Object.keys(template).map(item => {
-    console.log(template[item].template)
-    template[item].render()
-  })
+  // Object.keys(template).map(item => {
+  //   console.log(template[item].template)
+  //   template[item].render()
+  // })
+
+  return {
+
+  }
 }
