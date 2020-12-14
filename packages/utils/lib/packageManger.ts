@@ -1,5 +1,9 @@
+/*
+ * @Author: last order
+ * @Date: 2020-12-14 09:04:45
+ * @LastEditTime: 2020-12-14 16:45:15
+ */
 import { exec } from 'child_process'
-import { promisify } from 'util'
 
 function checkManger (command: string): Promise<Boolean> {
   return new Promise(resolve => {
@@ -12,7 +16,7 @@ function checkManger (command: string): Promise<Boolean> {
 export function hasYarn () {
   return checkManger('yarn --version')
 }
-  
+
 export function hasCnpm () {
   return checkManger('cnpm --version')
 }

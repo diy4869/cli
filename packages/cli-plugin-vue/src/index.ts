@@ -2,7 +2,6 @@ import generatorOptions from './config/index'
 import path = require('path')
 import { API } from '@lo_cli/core/src/types'
 import webpack = require('webpack')
-console.log(234234)
 
 export default async function VueTemplate (api: API): Promise<webpack.Configuration> {
   const options = await generatorOptions()
@@ -38,7 +37,31 @@ export default async function VueTemplate (api: API): Promise<webpack.Configurat
   //   template[item].render()
   // })
 
-  return {
-
+  const VueWebpackConfig: webpack.Configuration = {
+    module: {
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
+        }
+      ]
+    },
+    resolve: {
+      extensions: ['.vue']
+    },
+    plugins: []
   }
+
+  if (options.useVue3) {
+    const VueLoaderPlguin = require('vue-loader/dist/plugin').default
+    VueWebpackConfig.plugins.push(
+      new VueLoaderPlguin()
+    )
+  } else {
+    const VueLoaderPlguin = require('vue-loader/lib/index')
+    VueWebpackConfig.plugins.push(
+      new VueLoaderPlguin.VueLoaderPlugin()
+    )
+  }
+  return VueWebpackConfig
 }
