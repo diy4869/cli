@@ -1,13 +1,12 @@
 /*
  * @Author: last order
  * @Date: 2020-06-15 11:53:29
- * @LastEditTime: 2020-12-14 16:28:05
+ * @LastEditTime: 2020-12-16 09:12:51
  */
-import path = require('path')
-import fs = require('fs')
 import { checkDirectory, mkdir } from '../utils'
+import fs = require('fs')
 
-interface Files {
+export interface Files {
   [filepath: string]: string | Buffer | Files
 }
 
@@ -18,15 +17,21 @@ export default class Generator {
     this.generatorFile = generatorFile
   }
 
-  async run (fileList: Files = this.generatorFile): Promise<void> {
+  async run (genenatorPath: string, fileList: Files = this.generatorFile): Promise<void> {
+    if (!await checkDirectory(genenatorPath)) {
+      await mkdir(genenatorPath)
+    }
+
     Object.keys(fileList).forEach(async filepath => {
+      const outputPath = `${genenatorPath}/${filepath}`
       if (typeof fileList[filepath] === 'object') {
-        if(!await checkDirectory(filepath)) {
-          await mkdir(filepath)
-          this.run(fileList[filepath] as Files)
+        if (!await checkDirectory(filepath)) {
+          console.log(filepath)
+          await mkdir(outputPath)
+          this.run(outputPath, fileList[filepath] as Files)
         }
       } else {
-        fs.writeFileSync(path.resolve(filepath), fileList[filepath] as string | Buffer)
+        fs.writeFileSync(outputPath, fileList[filepath] as string | Buffer)
       }
     })
   }

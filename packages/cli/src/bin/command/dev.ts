@@ -1,11 +1,17 @@
+/*
+ * @Author: last order
+ * @Date: 2020-12-14 09:04:45
+ * @LastEditTime: 2020-12-15 10:31:25
+ */
 
-import { buildMode, report, server, getPort, program, userWebpackConfig } from '../../utils'
+import { buildMode, report, server, getPort, program } from '../../utils'
 import webpackBaseConfig from '@lo_cli/template/webpack/webpack.base.config'
 import { HOST } from '../../config'
 import { merge } from 'webpack-merge'
 import webpack = require('webpack')
 import chalk = require('chalk')
 import address = require('address')
+import FriendlyErrrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const log = (PORT: number): void => {
   console.clear()
@@ -24,6 +30,18 @@ export default async function (): Promise<void> {
       new webpack.HotModuleReplacementPlugin({
         multiStep: true,
         fullBuildTimeout: 200
+      }),
+      new FriendlyErrrorsWebpackPlugin({
+        compilationSuccessInfo: undefined,
+        onErrors (severity, errors) {
+          console.log(severity)
+          console.log(errors)
+          if (severity !== 'error' || severity !== 'warning') {
+            return undefined
+          } else {
+            log(PORT)
+          }
+        }
       })
     ]
   })
@@ -32,16 +50,15 @@ export default async function (): Promise<void> {
     config
     // userWebpackConfig?.configWebpack?.call(userWebpackConfig.configWebpack, config, process.env.NODE_ENV)
   )
-  console.log(userWebpack)
   const compiler = webpack(userWebpack)
   const devServer = server(compiler)
   const PORT = await getPort()
+  // compiler.hooks.done.tap('cli-service dev', () => {
+  //   // console.log('产生了新的编译')
+  //   log(PORT)
+  // })
   await (await devServer).listen(PORT, HOST, err => {
     if (err) return console.log(err)
-    log(PORT)
-  })
-  compiler.hooks.compilation.tap('compilation', () => {
-    console.log('产生了新的编译')
     log(PORT)
   })
 }

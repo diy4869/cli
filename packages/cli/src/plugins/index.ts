@@ -1,8 +1,15 @@
+/*
+ * @Author: last order
+ * @Date: 2020-12-14 09:04:45
+ * @LastEditTime: 2020-12-15 14:55:56
+ */
 import devConfig from '@lo_cli/template/webpack/webpack.base.config'
-import { render } from '../utils/index'
+import { assignPackage } from '@lo_cli/utils/index'
 import { merge } from 'webpack-merge'
+import { render } from '../utils/index'
 import { PluginOptions } from '../types'
-
+import Generator, { Files } from './generator'
+import webpack = require('webpack')
 export default class Plugins {
   plugins: Array<PluginOptions>
 
@@ -18,19 +25,29 @@ export default class Plugins {
   }
 
   // 调用插件
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  async call (name: string) {
+  async call (name: string): Promise<webpack.Configuration> {
     const res = this.plugins.find(item => item.name === name)
     const config = devConfig('development')
 
     if (res) {
       const api = {
         config,
-        render
+        render,
+        assignPackage,
+        generator (files: Files) {
+          // eslint-disable-next-line no-new
+          new Generator(files)
+        }
       }
 
       const VueTemplateConfig = await res.apply.call(null, api)
-      const result = merge(config, VueTemplateConfig)
+
+      let result
+      if (VueTemplateConfig) {
+        result = merge(config, VueTemplateConfig)
+      } else {
+        result = config
+      }
 
       return result
     }
