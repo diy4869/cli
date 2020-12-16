@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@types/inquirer": "^7.3.1"
+  },
+  "devDependencies": {
+    "vue-loader": "^15.9.5"
   }
 }

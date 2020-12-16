@@ -1,4 +1,9 @@
-import webpackProdConfig from '@lo_cli/template/webpack/webpack.prod.config'
+/*
+ * @Author: last order
+ * @Date: 2020-12-14 09:04:45
+ * @LastEditTime: 2020-12-16 13:55:41
+ */
+import webpackProdConfig from 'cli-plugin-default/src/webpack/webpack.prod.config'
 import { buildMode, report, program, userWebpackConfig } from '../../utils'
 import { merge } from 'webpack-merge'
 import webpack = require('webpack')

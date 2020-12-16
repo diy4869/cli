@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-02 10:02:02
- * @LastEditTime: 2020-06-09 10:58:01
+ * @LastEditTime: 2020-12-16 09:40:27
  */
 module.exports = {
   parser: '@typescript-eslint/parser',
@@ -13,9 +13,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended'
   ],
-  rules: {
-    semi: 0
-  },
   env: {
     browser: true,
     node: true,

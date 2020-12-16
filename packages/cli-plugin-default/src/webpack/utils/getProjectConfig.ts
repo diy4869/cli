@@ -1,13 +1,13 @@
 /*
  * @Author: last order
  * @Date: 2020-06-12 17:37:03
- * @LastEditTime: 2020-06-12 18:47:37
+ * @LastEditTime: 2020-12-16 15:37:18
  */
-import { ProjectConfig as userWebpackConfig } from '../../project.config'
+import { ProjectConfig as userWebpackConfig } from 'cli-plugin-default/src/template/project.config'
 import fs = require('fs')
 import path = require('path')
 
-const projectConfigPath = path.resolve(__dirname, '../../project.config.ts')
+const projectConfigPath = path.resolve(__dirname, '../../template/project.config.ts')
 
 export default (): userWebpackConfig => {
   const stat = fs.statSync(projectConfigPath)

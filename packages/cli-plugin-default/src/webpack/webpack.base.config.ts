@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-07-30 14:15:17
+ * @LastEditTime: 2020-12-16 15:24:49
  */
 import getProjectConfig from './utils/getProjectConfig'
 import multiPage from './utils/index'
@@ -15,12 +15,11 @@ const userWebpackConfig = () => getProjectConfig()
 
 type WEBPACK_ENV = 'development' | 'production'
 
-console.log(userWebpackConfig().pages ? multiPage.entry() : '../src/index.ts')
-console.log(path.resolve(__dirname, '../src'))
+
 export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
   const config: webpack.Configuration = {
     mode: ENV || 'development',
-    entry: userWebpackConfig().pages ? multiPage.entry() : path.resolve(__dirname, '../src/index.ts'),
+    entry: userWebpackConfig().pages ? multiPage.entry() : path.resolve(__dirname, '../template/src/index.ts'),
     output: {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].[fullhash:8].js'
@@ -132,7 +131,7 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
       new HtmlWebpackPlugin({
         filename: 'index.html',
         inject: true,
-        template: path.resolve(__dirname, '../src/page/index.html')
+        template: path.resolve(__dirname, '../template/src/page/index.html')
       })
     ]
   } else {

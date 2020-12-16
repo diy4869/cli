@@ -1,21 +1,24 @@
-// import { checkDirectory, copy } from '../../utils'
-// import * as templatePackge from '../../template/package.json'
-// import fs = require('fs')
-// import path = require('path')
-// import ora = require('ora')
-// import chalk = require('chalk')
+/*
+ * @Author: last order
+ * @Date: 2020-12-14 09:04:45
+ * @LastEditTime: 2020-12-16 16:28:31
+ */
 import Plugins from '../../plugins/index'
-import VueTemplate from 'cli-plugin-vue/src/index'
+import VueTemplate from 'cli-plugin-vue'
+import baseTemplate from 'cli-plugin-default'
 
 export default async (): Promise<void> => {
   // eslint-disable-next-line no-new
-  const plugins = new Plugins()
-
-  plugins.register({
-    name: 'VueTemplate',
-    apply: VueTemplate
-  })
-  plugins.call('VueTemplate')
+  new Plugins([
+    {
+      name: 'baseTemplate',
+      apply: baseTemplate
+    },
+    {
+      name: 'VueTemplate',
+      apply: VueTemplate
+    }
+  ]).run()
 }
 
 // export default async (projectName: string, options: string[]): Promise<void> => {

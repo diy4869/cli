@@ -5,7 +5,7 @@
  */
 
 import { buildMode, report, server, getPort, program } from '../../utils'
-import webpackBaseConfig from '@lo_cli/template/webpack/webpack.base.config'
+import webpackBaseConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { HOST } from '../../config'
 import { merge } from 'webpack-merge'
 import webpack = require('webpack')

@@ -1,8 +1,8 @@
 {
-  "name": "@lo_cli/template",
+  "name": "cli-plugin-default",
   "version": "1.0.1-alpha.0",
   "description": "",
-  "main": "./src/index.ts",
+  "main": "./index.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack/webpack.dev.config.ts",
     "build": "cross-env NODE_ENV=production webpack --progress --config webpack/webpack.prod.config.ts",
@@ -60,6 +60,5 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^5.7.0",
     "webpackbar": "^5.0.0-3"
-  },
-  "gitHead": "a3b2a9793fcc47be76150b3e9ac1bf7c53383fe4"
+  }
 }
