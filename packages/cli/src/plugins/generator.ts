@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-15 11:53:29
- * @LastEditTime: 2020-12-16 09:12:51
+ * @LastEditTime: 2020-12-17 15:30:33
  */
 import { checkDirectory, mkdir } from '../utils'
 import fs = require('fs')
@@ -26,7 +26,6 @@ export default class Generator {
       const outputPath = `${genenatorPath}/${filepath}`
       if (typeof fileList[filepath] === 'object') {
         if (!await checkDirectory(filepath)) {
-          console.log(filepath)
           await mkdir(outputPath)
           this.run(outputPath, fileList[filepath] as Files)
         }

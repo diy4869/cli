@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-12-15 15:37:56
- * @LastEditTime: 2020-12-16 15:53:05
+ * @LastEditTime: 2020-12-17 16:56:31
  */
 import { checkDirectory, mkdir } from '@lo_cli/core/src/utils'
 import { Files } from '@lo_cli/core/src/plugins/generator'
@@ -17,10 +17,10 @@ export const outputFiles = async (filePath: string) => {
         await mkdir(filepath)
         await fn(filepath, obj[item])
       } else {
-        // obj[item] = fs.readFileSync(filepath, {
-        //   encoding: 'utf-8'
-        // })
-        obj[item] = ''
+        obj[item] = fs.readFileSync(filepath, {
+          encoding: 'utf-8'
+        })
+        // obj[item] = ''
       }
     }
 

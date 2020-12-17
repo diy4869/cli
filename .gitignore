@@ -1,4 +1,5 @@
 node_modules
-
+.VSCodeCounter
 src/lib/test
 lerna-debug.log
+test

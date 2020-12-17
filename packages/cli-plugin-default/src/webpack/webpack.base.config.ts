@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-12-16 15:24:49
+ * @LastEditTime: 2020-12-17 16:57:30
  */
 import getProjectConfig from './utils/getProjectConfig'
 import multiPage from './utils/index'
@@ -19,7 +19,7 @@ type WEBPACK_ENV = 'development' | 'production'
 export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
   const config: webpack.Configuration = {
     mode: ENV || 'development',
-    entry: userWebpackConfig().pages ? multiPage.entry() : path.resolve(__dirname, '../template/src/index.ts'),
+    entry: userWebpackConfig().pages ? multiPage.entry() : path.resolve(process.cwd(), './src/index.ts'),
     output: {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].[fullhash:8].js'

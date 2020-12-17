@@ -1,37 +1,65 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-16 16:28:31
+ * @LastEditTime: 2020-12-17 16:29:49
  */
 import Plugins from '../../plugins/index'
 import VueTemplate from 'cli-plugin-vue'
 import baseTemplate from 'cli-plugin-default'
+import Generator, { Files } from '../../plugins/generator'
+import { checkDirectory } from '../../utils'
+import ora = require('ora')
+import path = require('path')
+import commander = require('commander')
+import chalk = require('chalk')
 
-export default async (): Promise<void> => {
-  // eslint-disable-next-line no-new
-  new Plugins([
-    {
-      name: 'baseTemplate',
-      apply: baseTemplate
-    },
-    {
-      name: 'VueTemplate',
-      apply: VueTemplate
-    }
-  ]).run()
+export default async (projectName: string, program: commander.Command): Promise<void> => {
+  const dir = path.resolve(process.cwd(), projectName)
+  if (await checkDirectory(dir)) return console.log('文件夹已存在')
+  console.log()
+
+  if (program.vue) {
+    const generatorProject = await new Plugins([
+      {
+        name: 'cli-plugin-default',
+        apply: baseTemplate
+      },
+      {
+        name: 'cli-plugin-vue',
+        apply: VueTemplate
+      }
+    ]).run()
+    console.log()
+    const spinner = ora({
+      text: ' 正在努力生成项目中...\n',
+      spinner: 'dots'
+    }).start()
+
+    new Generator().run(dir, generatorProject as unknown as Files)
+    const timeout = setTimeout(() => {
+      spinner.stop()
+      console.clear()
+      console.log()
+      // eslint-disable-next-line no-irregular-whitespace
+      console.log(`${chalk.bgGreen(`${chalk.black(' 项目创建成功 ')}`)}\n`)
+      console.log(`  - ${chalk.cyan(`cd ${projectName}`)}`)
+      console.log(`  - ${chalk.cyan('npm install')}`)
+      console.log(`  - ${chalk.cyan('npm run dev')}`)
+    }, 1000)
+
+    process.on('beforeExit', () => {
+      clearTimeout(timeout)
+    })
+  } else {
+    console.log('default')
+  }
+
+  // new Generator().run('', generatorProject as unknown as Files)
 }
 
 // export default async (projectName: string, options: string[]): Promise<void> => {
 //   console.log(projectName, options)
-//   // const dir = path.resolve(process.cwd(), projectName)
-//   // const res = await checkDirectory(dir)
-//   // if (res) return console.log('文件夹已存在')
-//   // console.log()
-//   // const spinner = ora({
-//   //   text: ' 正在努力生成项目中...',
-//   //   spinner: 'dots'
-//   // })
-//   // spinner.start()
+//
 //   // const templatePath = path.resolve(__dirname, '../../../template')
 //   // const projectPath = path.resolve(process.cwd(), projectName)
 //   // fs.mkdirSync(projectPath)
