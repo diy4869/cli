@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-17 16:29:49
+ * @LastEditTime: 2020-12-18 11:05:36
  */
 import Plugins from '../../plugins/index'
 import VueTemplate from 'cli-plugin-vue'
@@ -39,7 +39,6 @@ export default async (projectName: string, program: commander.Command): Promise<
     const timeout = setTimeout(() => {
       spinner.stop()
       console.clear()
-      console.log()
       // eslint-disable-next-line no-irregular-whitespace
       console.log(`${chalk.bgGreen(`${chalk.black(' 项目创建成功 ')}`)}\n`)
       console.log(`  - ${chalk.cyan(`cd ${projectName}`)}`)

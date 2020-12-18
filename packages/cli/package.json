@@ -19,7 +19,8 @@
     "commander": "^6.2.0",
     "ejs": "^3.1.5",
     "inquirer": "^7.3.3",
-    "ora": "^5.1.0"
+    "ora": "^5.1.0",
+    "tapable": "^2.2.0"
   },
   "devDependencies": {
     "address": "^1.1.2",

@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-17 13:12:49
+ * @LastEditTime: 2020-12-18 17:36:01
  */
 import devConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { assignPackage } from '@lo_cli/utils/index'
@@ -11,13 +11,18 @@ import { PluginOptions, ReturnTypes } from '../types'
 // import Generator, { Files } from './generator'
 import { merge } from 'lodash'
 import { Files } from './generator'
+import { AsyncSeriesWaterfallHook } from 'tapable'
+// import { AsyncSeriesWaterfallHook as Types } from 'tapable/tapable'
 import inquirer = require('inquirer')
 
 export default class Plugins {
   plugins: Array<PluginOptions>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  hooks: any
 
   constructor (plugins?: Array<PluginOptions>) {
     this.plugins = []
+    this.hooks = new AsyncSeriesWaterfallHook(['api'])
 
     this.plugins = plugins?.map(item => this.register(item))
   }
@@ -45,7 +50,7 @@ export default class Plugins {
     return new Promise((resolve, reject) => {
       const res = this.plugins.find(item => item.name === name)
       const config = devConfig('development')
-      // const question = []
+
       if (res) {
         const api = {
           config,
@@ -57,6 +62,9 @@ export default class Plugins {
         const pluginTemplateConfig = res.apply.call(null, api)
 
         resolve(pluginTemplateConfig)
+        // this.hooks.tapPromise(name, result => res.apply.call(this, api, result))
+
+        // resolve()
       } else {
         reject(
           new Error(`${name} 没有注册`)

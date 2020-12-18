@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-06-01 16:52:41
- * @LastEditTime: 2020-12-17 16:57:30
+ * @LastEditTime: 2020-12-18 11:03:28
  */
 import getProjectConfig from './utils/getProjectConfig'
 import multiPage from './utils/index'
@@ -15,11 +15,13 @@ const userWebpackConfig = () => getProjectConfig()
 
 type WEBPACK_ENV = 'development' | 'production'
 
+const baseDir = process.cwd()
 
 export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
   const config: webpack.Configuration = {
+    context: baseDir,
     mode: ENV || 'development',
-    entry: userWebpackConfig().pages ? multiPage.entry() : path.resolve(process.cwd(), './src/index.ts'),
+    entry: userWebpackConfig()?.pages ? multiPage.entry() : path.resolve('./src/index.ts'),
     output: {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].[fullhash:8].js'
@@ -69,10 +71,10 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
           use: [
             {
               loader: 'eslint-loader',
-              options: {
-                emitError: true,
-                failOnError: true
-              }
+              // options: {
+              //   emitError: true,
+              //   failOnError: true
+              // }
             },
             'babel-loader'
           ]
@@ -82,10 +84,10 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
           use: [
             {
               loader: 'eslint-loader',
-              options: {
-                emitError: true,
-                failOnError: true
-              }
+              // options: {
+              //   emitError: true,
+              //   failOnError: true
+              // }
             },
             'ts-loader'
           ]
@@ -95,8 +97,8 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
     resolve: {
       extensions: ['.js', '.ts'],
       alias: {
-        '@': path.resolve(__dirname, '../src'),
-        '~': path.resolve(__dirname, '../src/assets')
+        '@': path.resolve(baseDir, './src'),
+        '~': path.resolve(baseDir, './src/assets')
       }
     },
     optimization: {
@@ -131,7 +133,7 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
       new HtmlWebpackPlugin({
         filename: 'index.html',
         inject: true,
-        template: path.resolve(__dirname, '../template/src/page/index.html')
+        template: path.resolve(baseDir, './src/page/index.html')
       })
     ]
   } else {
