@@ -1,11 +1,10 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-18 11:05:36
+ * @LastEditTime: 2020-12-21 15:24:41
  */
 import Plugins from '../../plugins/index'
 import VueTemplate from 'cli-plugin-vue'
-import baseTemplate from 'cli-plugin-default'
 import Generator, { Files } from '../../plugins/generator'
 import { checkDirectory } from '../../utils'
 import ora = require('ora')
@@ -21,14 +20,12 @@ export default async (projectName: string, program: commander.Command): Promise<
   if (program.vue) {
     const generatorProject = await new Plugins([
       {
-        name: 'cli-plugin-default',
-        apply: baseTemplate
-      },
-      {
         name: 'cli-plugin-vue',
         apply: VueTemplate
       }
     ]).run()
+
+    return
     console.log()
     const spinner = ora({
       text: ' 正在努力生成项目中...\n',

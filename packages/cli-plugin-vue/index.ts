@@ -1,16 +1,17 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 16:43:51
- * @LastEditTime: 2020-12-16 17:24:33
+ * @LastEditTime: 2020-12-21 15:20:26
  */
 import generatorOptions from './src/config/index'
-import { API, ReturnTypes } from '@lo_cli/core/src/types'
+import { API, Options, ReturnTypes } from '@lo_cli/core/src/types'
 import { outputFiles } from '@lo_cli/utils/index'
 import webpack = require('webpack')
 import path = require('path')
 
-export default async function VueTemplate (api: API): Promise<ReturnTypes> {
-  const options = await api.prompt(generatorOptions)
+export default async function VueTemplate (api: API, options: Options): Promise<ReturnTypes> {
+  await api.prompt(generatorOptions)
+
   const VueWebpackConfig: webpack.Configuration = {
     module: {
       rules: [
@@ -41,6 +42,7 @@ export default async function VueTemplate (api: API): Promise<ReturnTypes> {
     console.log('vue3')
     try {
       const VueLoaderPlguin = require('vue-loader/dist/plugin').default
+
       VueWebpackConfig.plugins.push(
         new VueLoaderPlguin()
       )

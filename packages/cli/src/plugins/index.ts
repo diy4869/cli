@@ -1,16 +1,17 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-18 17:36:01
+ * @LastEditTime: 2020-12-21 15:19:47
  */
 import devConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { assignPackage } from '@lo_cli/utils/index'
 // import { merge } from 'webpack-merge'
 import { render } from '../utils/index'
-import { PluginOptions, ReturnTypes } from '../types'
+import { API, PluginOptions, ReturnTypes, Options } from '../types'
 // import Generator, { Files } from './generator'
-import { merge } from 'lodash'
+import { merge, assign } from 'lodash'
 import { Files } from './generator'
+import baseTemplate from 'cli-plugin-default'
 import { AsyncSeriesWaterfallHook } from 'tapable'
 // import { AsyncSeriesWaterfallHook as Types } from 'tapable/tapable'
 import inquirer = require('inquirer')
@@ -22,18 +23,49 @@ export default class Plugins {
 
   constructor (plugins?: Array<PluginOptions>) {
     this.plugins = []
-    this.hooks = new AsyncSeriesWaterfallHook(['api'])
 
-    this.plugins = plugins?.map(item => this.register(item))
+    const defaultTempte = {
+      name: 'cli-plugin-default',
+      apply: baseTemplate
+    }
+
+    const result = plugins?.reduce((total, current) => {
+      return total.concat(this.register(current))
+    }, [])
+
+    this.plugins = [defaultTempte, ...result]
   }
 
   async run (): Promise<Files> {
-    const list = []
+    const hook = new AsyncSeriesWaterfallHook(['api'])
+
+    let obj: Files = {}
+    let generatorOptions: Options = {}
+
     for (const current of this.plugins) {
-      const result = await this.call(current.name)
-      list.push(result.generatorFiles)
+      const { plugin, api } = await this.call(current.name)
+      hook.tapPromise(plugin.name, async (res: ReturnTypes) => {
+        // 插件所返回的webpack配置
+        if (res.config) {
+          api.config = merge(api.config, res.config)
+        }
+        // 插件最终需要修改的模板
+        if (res.generatorFiles) {
+          obj = merge(obj, res.generatorFiles)
+        }
+        // 插件所提供的prompt选项，如果存在则合并，并传递给下一个插件
+        if (res.options) {
+          generatorOptions = assign(generatorOptions, res.options)
+        }
+
+        return plugin.apply.call(null, api, {
+          generatorFiles: obj,
+          generatorOptions
+        })
+      })
     }
-    const obj: Files = merge({}, ...list)
+
+    hook.promise('')
 
     return obj
   }
@@ -46,7 +78,10 @@ export default class Plugins {
   }
 
   // 调用插件
-  call (name: string): Promise<ReturnTypes> {
+  call (name: string): Promise<{
+    plugin: PluginOptions,
+    api: API
+  }> {
     return new Promise((resolve, reject) => {
       const res = this.plugins.find(item => item.name === name)
       const config = devConfig('development')
@@ -59,12 +94,10 @@ export default class Plugins {
           prompt: question => inquirer.prompt(question)
         }
 
-        const pluginTemplateConfig = res.apply.call(null, api)
-
-        resolve(pluginTemplateConfig)
-        // this.hooks.tapPromise(name, result => res.apply.call(this, api, result))
-
-        // resolve()
+        resolve({
+          plugin: res,
+          api
+        })
       } else {
         reject(
           new Error(`${name} 没有注册`)
