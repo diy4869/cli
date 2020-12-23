@@ -3,9 +3,10 @@
 /*
  * @Author: last order
  * @Date: 2020-05-28 20:17:05
- * @LastEditTime: 2020-12-17 14:28:48
+ * @LastEditTime: 2020-12-23 09:43:13
  */
 import create from './command/create'
+import { install } from './command/update'
 import { version } from '../../package.json'
 import { Command } from 'commander'
 import chalk = require('chalk')
@@ -20,6 +21,12 @@ program
   .description('创建项目')
   .helpOption('-h, --help', '查看帮助')
   .action(create)
+
+program
+  .command('update')
+  .description('更新依赖')
+  .helpOption('-h, --help', '查看帮助')
+  .action(install)
 
 // 未知命令处理
 program

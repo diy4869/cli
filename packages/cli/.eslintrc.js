@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-05-29 18:46:43
- * @LastEditTime: 2020-12-16 14:29:39
+ * @LastEditTime: 2020-12-22 15:13:23
  */
 module.exports = {
   parser: '@typescript-eslint/parser',

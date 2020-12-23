@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-21 15:19:47
+ * @LastEditTime: 2020-12-23 09:41:58
  */
 import devConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { assignPackage } from '@lo_cli/utils/index'
@@ -77,7 +77,6 @@ export default class Plugins {
     }
   }
 
-  // 调用插件
   call (name: string): Promise<{
     plugin: PluginOptions,
     api: API
