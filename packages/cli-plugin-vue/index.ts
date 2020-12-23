@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 16:43:51
- * @LastEditTime: 2020-12-21 15:20:26
+ * @LastEditTime: 2020-12-23 11:35:12
  */
 import generatorOptions from './src/config/index'
 import { API, Options, ReturnTypes } from '@lo_cli/core/src/types'
@@ -10,7 +10,7 @@ import webpack = require('webpack')
 import path = require('path')
 
 export default async function VueTemplate (api: API, options: Options): Promise<ReturnTypes> {
-  await api.prompt(generatorOptions)
+  const promptOption = await api.prompt(generatorOptions)
 
   const VueWebpackConfig: webpack.Configuration = {
     module: {
@@ -26,9 +26,9 @@ export default async function VueTemplate (api: API, options: Options): Promise<
     },
     plugins: []
   }
-
-  if (options.useVue3) {
-    api.assignPackage({
+  let packageJson = {}
+  if (promptOption.useVue3) {
+    packageJson = api.assignPackage({
       dependencies: {
         'vue': '3.0.4',
         'vue-router': '4.0.0',
@@ -39,7 +39,6 @@ export default async function VueTemplate (api: API, options: Options): Promise<
         'vue-loader': '16.1.1'
       }
     })
-    console.log('vue3')
     try {
       const VueLoaderPlguin = require('vue-loader/dist/plugin').default
 
@@ -49,13 +48,12 @@ export default async function VueTemplate (api: API, options: Options): Promise<
     } catch (err) {
       console.log(err)
     }
-
   } else {
-    api.assignPackage({
+    packageJson = api.assignPackage({
       dependencies: {
         'vue': '2.6.12',
-        'vue-router': '',
-        'vuex': ''
+        'vue-router': '3.4.9',
+        'vuex': '3.6.0'
       },
       devDependencies: {
         'vue-template-compiler': '2.6.12',
@@ -75,8 +73,10 @@ export default async function VueTemplate (api: API, options: Options): Promise<
 
   const templatePath = path.resolve(__dirname, './src/template/vue2')
 
+  const template = await outputFiles(templatePath)
+
   return {
-    generatorFiles: await outputFiles(templatePath),
+    generatorFiles: template,
     config: VueWebpackConfig
   }
 }

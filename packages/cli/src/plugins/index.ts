@@ -1,73 +1,97 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-23 09:41:58
+ * @LastEditTime: 2020-12-23 11:39:03
  */
 import devConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { assignPackage } from '@lo_cli/utils/index'
-// import { merge } from 'webpack-merge'
+import { merge as WebpackMerge } from 'webpack-merge'
 import { render } from '../utils/index'
-import { API, PluginOptions, ReturnTypes, Options } from '../types'
+import { API, PluginOptions, ReturnTypes } from '../types'
 // import Generator, { Files } from './generator'
 import { merge, assign } from 'lodash'
 import { Files } from './generator'
 import baseTemplate from 'cli-plugin-default'
 import { AsyncSeriesWaterfallHook } from 'tapable'
-// import { AsyncSeriesWaterfallHook as Types } from 'tapable/tapable'
+import fs = require('fs')
+import path = require('path')
 import inquirer = require('inquirer')
+import webpack = require('webpack')
 
 export default class Plugins {
   plugins: Array<PluginOptions>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  hooks: any
+  api?: API
 
   constructor (plugins?: Array<PluginOptions>) {
+    this.api = {
+      config: devConfig(),
+      render,
+      assignPackage,
+      prompt: question => inquirer.prompt(question)
+    }
     this.plugins = []
 
     const defaultTempte = {
       name: 'cli-plugin-default',
       apply: baseTemplate
     }
-
-    const result = plugins?.reduce((total, current) => {
-      return total.concat(this.register(current))
-    }, [])
-
-    this.plugins = [defaultTempte, ...result]
+    if (plugins) {
+      const result = plugins?.reduce((total, current) => {
+        return total.concat(this.register(current))
+      }, [])
+      this.plugins = [defaultTempte, ...result]
+    }
   }
 
-  async run (): Promise<Files> {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  getPackage (): object {
+    return assignPackage()
+  }
+
+  async run (): Promise<{
+    template: Files,
+    webpackConfig: webpack.Configuration
+  }> {
     const hook = new AsyncSeriesWaterfallHook(['api'])
+    const list: Files[] = []
 
     let obj: Files = {}
-    let generatorOptions: Options = {}
+    let generatorOptions = {}
 
     for (const current of this.plugins) {
-      const { plugin, api } = await this.call(current.name)
+      const plugin = await this.call(current.name)
       hook.tapPromise(plugin.name, async (res: ReturnTypes) => {
         // 插件所返回的webpack配置
         if (res.config) {
-          api.config = merge(api.config, res.config)
+          this.api.config = WebpackMerge(this.api.config, res.config)
         }
         // 插件最终需要修改的模板
         if (res.generatorFiles) {
-          obj = merge(obj, res.generatorFiles)
+          list.push(res.generatorFiles)
+          obj = merge(obj, ...list)
         }
         // 插件所提供的prompt选项，如果存在则合并，并传递给下一个插件
         if (res.options) {
           generatorOptions = assign(generatorOptions, res.options)
         }
 
-        return plugin.apply.call(null, api, {
+        return plugin.apply.call(null, this.api, {
           generatorFiles: obj,
           generatorOptions
         })
       })
     }
 
-    hook.promise('')
+    const res = await hook.promise('') as ReturnTypes
+    const template = merge(obj, res?.generatorFiles)
 
-    return obj
+    template['package.json'] = JSON.stringify(this.getPackage(), null, 2)
+    this.api.config = WebpackMerge(this.api.config, res.config)
+
+    return {
+      template,
+      webpackConfig: this.api.config
+    }
   }
 
   register (options: PluginOptions): PluginOptions {
@@ -77,26 +101,12 @@ export default class Plugins {
     }
   }
 
-  call (name: string): Promise<{
-    plugin: PluginOptions,
-    api: API
-  }> {
+  call (name: string): Promise<PluginOptions> {
     return new Promise((resolve, reject) => {
       const res = this.plugins.find(item => item.name === name)
-      const config = devConfig('development')
 
       if (res) {
-        const api = {
-          config,
-          render,
-          assignPackage,
-          prompt: question => inquirer.prompt(question)
-        }
-
-        resolve({
-          plugin: res,
-          api
-        })
+        resolve(res)
       } else {
         reject(
           new Error(`${name} 没有注册`)

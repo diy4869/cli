@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-21 15:24:41
+ * @LastEditTime: 2020-12-23 11:25:56
  */
 import Plugins from '../../plugins/index'
 import VueTemplate from 'cli-plugin-vue'
@@ -12,27 +12,29 @@ import path = require('path')
 import commander = require('commander')
 import chalk = require('chalk')
 
+export let config = {}
 export default async (projectName: string, program: commander.Command): Promise<void> => {
   const dir = path.resolve(process.cwd(), projectName)
   if (await checkDirectory(dir)) return console.log('文件夹已存在')
   console.log()
 
   if (program.vue) {
-    const generatorProject = await new Plugins([
+    const { template, webpackConfig } = await new Plugins([
       {
         name: 'cli-plugin-vue',
         apply: VueTemplate
       }
     ]).run()
+    config = webpackConfig
 
-    return
+    // return
     console.log()
     const spinner = ora({
       text: ' 正在努力生成项目中...\n',
       spinner: 'dots'
     }).start()
 
-    new Generator().run(dir, generatorProject as unknown as Files)
+    new Generator().run(dir, template as unknown as Files)
     const timeout = setTimeout(() => {
       spinner.stop()
       console.clear()

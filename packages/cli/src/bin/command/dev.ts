@@ -5,7 +5,6 @@
  */
 
 import { buildMode, report, server, getPort, program } from '../../utils'
-import webpackBaseConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { HOST } from '../../config'
 import { merge } from 'webpack-merge'
 import webpack = require('webpack')
@@ -24,27 +23,31 @@ const log = (PORT: number): void => {
 }
 
 export default async function (): Promise<void> {
-  const config = merge(webpackBaseConfig(program.mode), {
+  const baseConf = process.env.WEBPACK_CONFIG
+  console.log(baseConf)
+  // return
+  const config = merge({}, {
     mode: buildMode(program.mode),
     plugins: [
       new webpack.HotModuleReplacementPlugin({
         multiStep: true,
         fullBuildTimeout: 200
-      }),
-      new FriendlyErrrorsWebpackPlugin({
-        compilationSuccessInfo: undefined,
-        onErrors (severity, errors) {
-          console.log(severity)
-          console.log(errors)
-          if (severity !== 'error' || severity !== 'warning') {
-            return undefined
-          } else {
-            log(PORT)
-          }
-        }
       })
+      // new FriendlyErrrorsWebpackPlugin({
+      //   compilationSuccessInfo: undefined,
+      //   onErrors (severity, errors) {
+      //     console.log(severity)
+      //     console.log(errors)
+      //     if (severity !== 'error' || severity !== 'warning') {
+      //       return undefined
+      //     } else {
+      //       log(PORT)
+      //     }
+      //   }
+      // })
     ]
   })
+
   if (program.report) report(config, program.report)
   const userWebpack = merge(
     config
@@ -59,6 +62,6 @@ export default async function (): Promise<void> {
   // })
   await (await devServer).listen(PORT, HOST, err => {
     if (err) return console.log(err)
-    log(PORT)
+    // log(PORT)
   })
 }

@@ -1,13 +1,3 @@
-/*
- * @Author: last order
- * @Date: 2020-12-16 15:31:13
- * @LastEditTime: 2020-12-16 15:31:14
- */
-/*
- * @Author: last order
- * @Date: 2020-06-06 12:59:54
- * @LastEditTime: 2020-12-15 09:40:00
- */
 import webpack = require('webpack')
 import WebpackDevServer = require('webpack-dev-server')
 
@@ -31,7 +21,7 @@ interface TerserOptions {
 }
 
 export class ProjectConfig {
-  publicPath?: string = '/'
+  publicPath?: string = ''
   pages?: PagesInterface
   devServer?: WebpackDevServer.Configuration = {
     host: 'localhost',

@@ -1,7 +1,7 @@
 /*
  * @Author: last order
  * @Date: 2020-12-14 09:04:45
- * @LastEditTime: 2020-12-21 15:16:45
+ * @LastEditTime: 2020-12-23 11:38:50
  */
 import { Files } from '@lo_cli/core/src/plugins/generator'
 import inquirer = require('inquirer')
@@ -11,17 +11,22 @@ export interface API {
   config: webpack.Configuration,
   render<T>(path: string, options: T): string,
   // eslint-disable-next-line @typescript-eslint/ban-types
-  assignPackage (package): object,
+  assignPackage (package?: object): object,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prompt: (list: inquirer.QuestionCollection<unknown>) => Promise<any> & { ui: any }
 }
 
 export interface Options {
-  [key: string]: unknown
+  generatorFiles: Files
+  generatorOptions: {
+    [key: string]: unknown
+  }
 }
 
 export interface ReturnTypes {
-  options?: Options,
+  options?: {
+    [key: string]: unknown
+  },
   generatorFiles: Files,
   config?: webpack.Configuration
 }

@@ -1,8 +1,3 @@
-/*
- * @Author: last order
- * @Date: 2020-06-04 13:50:43
- * @LastEditTime: 2020-12-18 11:43:42
- */
 module.exports = {
   presets: [
     [

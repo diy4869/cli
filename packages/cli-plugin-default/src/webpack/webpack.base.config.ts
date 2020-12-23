@@ -21,7 +21,7 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
   const config: webpack.Configuration = {
     context: baseDir,
     mode: ENV || 'development',
-    entry: userWebpackConfig()?.pages ? multiPage.entry() : path.resolve('./src/index.ts'),
+    entry: userWebpackConfig()?.pages ? multiPage.entry() : path.resolve('./src/index.js'),
     output: {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].[fullhash:8].js'
