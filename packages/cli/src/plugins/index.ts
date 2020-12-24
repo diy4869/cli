@@ -17,6 +17,7 @@ import fs = require('fs')
 import path = require('path')
 import inquirer = require('inquirer')
 import webpack = require('webpack')
+import Buffer = require('buffer')
 
 export default class Plugins {
   plugins: Array<PluginOptions>
@@ -46,6 +47,15 @@ export default class Plugins {
   // eslint-disable-next-line @typescript-eslint/ban-types
   getPackage (): object {
     return assignPackage()
+  }
+
+  // 创建临时文件读取webpack config
+  createTempWebpackConfig (config: webpack.Configuration): void {
+    // const tempPath = path.resolve(__dirname, '../temp/webpack.config.js')
+
+    // const buffer = new Buffer.Buffer
+    // fs.writeFileSync(tempPath, config)
+    // process.config = config
   }
 
   async run (): Promise<{
@@ -87,6 +97,8 @@ export default class Plugins {
 
     template['package.json'] = JSON.stringify(this.getPackage(), null, 2)
     this.api.config = WebpackMerge(this.api.config, res.config)
+    process.env.WEBPACK_CONFIG = JSON.stringify(this.api.config)
+    // this.createTempWebpackConfig(this.api.config)
 
     return {
       template,

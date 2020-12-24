@@ -21,8 +21,10 @@
 
 ### 安装
 ```
-npm install @cli/core
+npm install @lo_cli/core -g
 ```
+### debug
+如果你需要debug，你需要执行npm run install或者lerna bootstrap, 当你想本地调试的时候，需要``` cd packages/cli```，并```npm link```, npm会帮你全局注册个命令，然后你就可以愉快的debug了。
 
 ### 基本使用
 
@@ -42,6 +44,7 @@ cli create project --vue // 创建一个项目
 ```
 cli create project --react // 创建一个项目
 ```
+
 
 ### cli-service
 当你安装cli的时候，cli会给你注册个cli-service命令，用来启动服务，如果用过vue-cli or umi，那你将会对这个比较熟悉。

@@ -3,10 +3,9 @@
  * @Date: 2020-06-12 17:37:03
  * @LastEditTime: 2020-12-18 10:57:20
  */
-import { ProjectConfig as userWebpackConfig } from 'cli-plugin-default/src/template/project.config'
+import { ProjectConfig as userWebpackConfig } from 'cli-plugin-default/src/webpack/project.config'
 import fs = require('fs')
 import path = require('path')
-
 
 
 export default (): userWebpackConfig => {
@@ -21,6 +20,7 @@ export default (): userWebpackConfig => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { ProjectConfig } = require(projectConfigPath)
       const config = new ProjectConfig()
+
       return config
     }
   }

@@ -12,44 +12,48 @@ import path = require('path')
 import commander = require('commander')
 import chalk = require('chalk')
 
-export let config = {}
+export function baseCreate (dir: string, template: Files, projectName: string): void {
+  const spinner = ora({
+    text: ' 正在努力生成项目中...\n',
+    spinner: 'dots'
+  }).start()
+
+  new Generator().run(dir, template as unknown as Files)
+  const timeout = setTimeout(() => {
+    spinner.stop()
+    console.clear()
+    // eslint-disable-next-line no-irregular-whitespace
+    console.log(`${chalk.bgGreen(`${chalk.black(' 项目创建成功 ')}`)}\n`)
+    console.log(`  - ${chalk.cyan(`cd ${projectName}`)}`)
+    console.log(`  - ${chalk.cyan('npm install')}`)
+    console.log(`  - ${chalk.cyan('npm run dev')}`)
+  }, 1000)
+
+  process.on('beforeExit', () => {
+    clearTimeout(timeout)
+  })
+}
+
 export default async (projectName: string, program: commander.Command): Promise<void> => {
   const dir = path.resolve(process.cwd(), projectName)
   if (await checkDirectory(dir)) return console.log('文件夹已存在')
   console.log()
 
   if (program.vue) {
-    const { template, webpackConfig } = await new Plugins([
+    const { template } = await new Plugins([
       {
         name: 'cli-plugin-vue',
         apply: VueTemplate
       }
     ]).run()
-    config = webpackConfig
 
-    // return
-    console.log()
-    const spinner = ora({
-      text: ' 正在努力生成项目中...\n',
-      spinner: 'dots'
-    }).start()
-
-    new Generator().run(dir, template as unknown as Files)
-    const timeout = setTimeout(() => {
-      spinner.stop()
-      console.clear()
-      // eslint-disable-next-line no-irregular-whitespace
-      console.log(`${chalk.bgGreen(`${chalk.black(' 项目创建成功 ')}`)}\n`)
-      console.log(`  - ${chalk.cyan(`cd ${projectName}`)}`)
-      console.log(`  - ${chalk.cyan('npm install')}`)
-      console.log(`  - ${chalk.cyan('npm run dev')}`)
-    }, 1000)
-
-    process.on('beforeExit', () => {
-      clearTimeout(timeout)
-    })
+    return
+    baseCreate(dir, template, projectName)
   } else {
     console.log('default')
+    const { template } = await new Plugins().run()
+
+    baseCreate(dir, template, projectName)
   }
 
   // new Generator().run('', generatorProject as unknown as Files)
