@@ -7,6 +7,7 @@ import Plugins from '../../plugins/index'
 import VueTemplate from 'cli-plugin-vue'
 import Generator, { Files } from '../../plugins/generator'
 import { checkDirectory } from '../../utils'
+import { API } from '@/types'
 import ora = require('ora')
 import path = require('path')
 import commander = require('commander')
@@ -44,6 +45,18 @@ export default async (projectName: string, program: commander.Command): Promise<
       {
         name: 'cli-plugin-vue',
         apply: VueTemplate
+      },
+      {
+        name: 'cli-plugin-test',
+        apply (api: API) {
+          api.configWebpack((config) => {
+            // console.log('test', config)
+            return {}
+          })
+          return {
+            generatorFiles: {}
+          }
+        }
       }
     ]).run()
 

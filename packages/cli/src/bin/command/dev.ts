@@ -7,10 +7,11 @@
 import { buildMode, report, server, getPort, program } from '../../utils'
 import { HOST } from '../../config'
 import { merge } from 'webpack-merge'
+// import FriendlyErrrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+import api from '@lo_cli/core/src/plugins/api'
 import webpack = require('webpack')
 import chalk = require('chalk')
 import address = require('address')
-import FriendlyErrrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const log = (PORT: number): void => {
   console.clear()
@@ -23,8 +24,13 @@ const log = (PORT: number): void => {
 }
 
 export default async function (): Promise<void> {
-  const baseConf = process.env.WEBPACK_CONFIG
-  console.log(baseConf)
+  api.configWebpack(config => {
+    if (config) {
+      console.log(config.module)
+      return config
+    }
+  })
+
   // return
   const config = merge({}, {
     mode: buildMode(program.mode),

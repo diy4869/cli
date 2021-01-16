@@ -3,33 +3,21 @@
  * @Date: 2020-12-14 09:04:45
  * @LastEditTime: 2020-12-23 11:39:03
  */
-import devConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
+// import devConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { assignPackage } from '@lo_cli/utils/index'
-import { merge as WebpackMerge } from 'webpack-merge'
-import { render } from '../utils/index'
 import { API, PluginOptions, ReturnTypes } from '../types'
-// import Generator, { Files } from './generator'
 import { merge, assign } from 'lodash'
 import { Files } from './generator'
 import baseTemplate from 'cli-plugin-default'
 import { AsyncSeriesWaterfallHook } from 'tapable'
-import fs = require('fs')
-import path = require('path')
-import inquirer = require('inquirer')
-import webpack = require('webpack')
-import Buffer = require('buffer')
+import api from './api'
 
 export default class Plugins {
   plugins: Array<PluginOptions>
   api?: API
 
   constructor (plugins?: Array<PluginOptions>) {
-    this.api = {
-      config: devConfig(),
-      render,
-      assignPackage,
-      prompt: question => inquirer.prompt(question)
-    }
+    this.api = api
     this.plugins = []
 
     const defaultTempte = {
@@ -49,18 +37,8 @@ export default class Plugins {
     return assignPackage()
   }
 
-  // 创建临时文件读取webpack config
-  createTempWebpackConfig (config: webpack.Configuration): void {
-    // const tempPath = path.resolve(__dirname, '../temp/webpack.config.js')
-
-    // const buffer = new Buffer.Buffer
-    // fs.writeFileSync(tempPath, config)
-    // process.config = config
-  }
-
   async run (): Promise<{
-    template: Files,
-    webpackConfig: webpack.Configuration
+    template: Files
   }> {
     const hook = new AsyncSeriesWaterfallHook(['api'])
     const list: Files[] = []
@@ -71,10 +49,6 @@ export default class Plugins {
     for (const current of this.plugins) {
       const plugin = await this.call(current.name)
       hook.tapPromise(plugin.name, async (res: ReturnTypes) => {
-        // 插件所返回的webpack配置
-        if (res.config) {
-          this.api.config = WebpackMerge(this.api.config, res.config)
-        }
         // 插件最终需要修改的模板
         if (res.generatorFiles) {
           list.push(res.generatorFiles)
@@ -96,13 +70,9 @@ export default class Plugins {
     const template = merge(obj, res?.generatorFiles)
 
     template['package.json'] = JSON.stringify(this.getPackage(), null, 2)
-    this.api.config = WebpackMerge(this.api.config, res.config)
-    process.env.WEBPACK_CONFIG = JSON.stringify(this.api.config)
-    // this.createTempWebpackConfig(this.api.config)
 
     return {
-      template,
-      webpackConfig: this.api.config
+      template
     }
   }
 

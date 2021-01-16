@@ -8,10 +8,11 @@ import inquirer = require('inquirer')
 import webpack = require('webpack')
 
 export interface API {
-  config: webpack.Configuration,
+  configWebpack (fn: (config?: webpack.Configuration) => webpack.Configuration): void,
   render<T>(path: string, options: T): string,
   // eslint-disable-next-line @typescript-eslint/ban-types
   assignPackage (package?: object): object,
+  generator (dir: string, template: Files): void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prompt: (list: inquirer.QuestionCollection<unknown>) => Promise<any> & { ui: any }
 }

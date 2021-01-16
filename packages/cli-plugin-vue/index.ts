@@ -71,6 +71,9 @@ export default async function VueTemplate (api: API, options: Options): Promise<
     }
   }
 
+  api.configWebpack(() => {
+    return VueWebpackConfig
+  })
   const templatePath = path.resolve(__dirname, './src/template/vue2')
 
   const template = await outputFiles(templatePath)

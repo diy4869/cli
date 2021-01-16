@@ -16,7 +16,16 @@ export default (): webpack.Configuration => {
   // const smp = new SpeedMeasurePlugin()
   const config: webpack.Configuration = {
     optimization: {
-      minimize: true
+      minimize: true,
+      // 启用模块命名
+      moduleIds: 'named'
+    },
+    // 长缓存
+    cache: {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename]
+      }
     },
     plugins: [
       new OptimizationCssAssetsPlugin({
