@@ -5,9 +5,11 @@ import Generator from './generator'
 import Service from './service'
 import inquirer = require('inquirer')
 
+export const service = new Service()
+
 const api: API = {
   configWebpack (fn) {
-    new Service().configWebpack(fn)
+    service.configWebpack(fn)
   },
   render,
   assignPackage,

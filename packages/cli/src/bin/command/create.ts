@@ -6,12 +6,13 @@
 import Plugins from '../../plugins/index'
 import VueTemplate from 'cli-plugin-vue'
 import Generator, { Files } from '../../plugins/generator'
-import { checkDirectory } from '../../utils'
+import { checkDirectory, Delete } from '../../utils'
 import { API } from '@/types'
 import ora = require('ora')
 import path = require('path')
 import commander = require('commander')
 import chalk = require('chalk')
+import inquirer = require('inquirer')
 
 export function baseCreate (dir: string, template: Files, projectName: string): void {
   const spinner = ora({
@@ -22,7 +23,7 @@ export function baseCreate (dir: string, template: Files, projectName: string): 
   new Generator().run(dir, template as unknown as Files)
   const timeout = setTimeout(() => {
     spinner.stop()
-    console.clear()
+    // console.clear()
     // eslint-disable-next-line no-irregular-whitespace
     console.log(`${chalk.bgGreen(`${chalk.black(' 项目创建成功 ')}`)}\n`)
     console.log(`  - ${chalk.cyan(`cd ${projectName}`)}`)
@@ -37,8 +38,23 @@ export function baseCreate (dir: string, template: Files, projectName: string): 
 
 export default async (projectName: string, program: commander.Command): Promise<void> => {
   const dir = path.resolve(process.cwd(), projectName)
-  if (await checkDirectory(dir)) return console.log('文件夹已存在')
-  console.log()
+  if (await checkDirectory(dir)) {
+    // return console.log('文件夹已存在')
+    console.log()
+    const { rewrite } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'rewrite',
+        message: '文件夹已存在，是否覆盖',
+        default: false
+      }
+    ])
+    if (rewrite) {
+      await Delete(dir)
+    } else {
+      process.exit(0)
+    }
+  }
 
   if (program.vue) {
     const { template } = await new Plugins([
@@ -50,7 +66,7 @@ export default async (projectName: string, program: commander.Command): Promise<
         name: 'cli-plugin-test',
         apply (api: API) {
           api.configWebpack((config) => {
-            // console.log('test', config)
+            console.log('test', config)
             return {}
           })
           return {
@@ -60,7 +76,7 @@ export default async (projectName: string, program: commander.Command): Promise<
       }
     ]).run()
 
-    return
+    // return
     baseCreate(dir, template, projectName)
   } else {
     console.log('default')
