@@ -1,6 +1,7 @@
 import baseConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import { buildMode, report, server, getPort, program } from '../utils'
 import { HOST } from '../config'
+// import { getType } from '@lo_cli/utils'
 import merge from 'webpack-merge'
 import webpack = require('webpack')
 import chalk = require('chalk')
@@ -9,6 +10,12 @@ import dotenv = require('dotenv')
 import path = require('path')
 import glob = require('glob')
 import dotenvExpand = require('dotenv-expand')
+import fs = require('fs')
+
+declare global {
+  // eslint-disable-next-line no-var
+  var webpackConfig: webpack.Configuration
+}
 
 export default class Service {
   webpackConfig: webpack.Configuration
@@ -17,7 +24,7 @@ export default class Service {
   constructor () {
     this.webpackConfig = {}
     this.pluginWebpackConfig = [
-      // baseConfig()
+      baseConfig()
     ]
     this.context = process.cwd()
   }
@@ -30,8 +37,21 @@ export default class Service {
     this.webpackConfig = this.pluginWebpackConfig.reduce((total, current) => {
       return merge(total, current)
     }, {})
-    console.log(this.webpackConfig)
+    // eslint-disable-next-line no-eval
+    const str = JSON.stringify(eval('this.webpackConfig'), null, 2)
+    fs.writeFileSync(
+      path.resolve(`${this.context}/webpack.cache.config.js`),
+      `module.exports = ${str}`
+    )
     fn.call(fn, this.webpackConfig)
+
+    global.webpackConfig = this.webpackConfig
+
+    console.log(this.webpackConfig.module.rules)
+    console.log(this.webpackConfig)
+
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // return this.webpackConfig
   }
 
   async dotEnv (mode = 'development'): Promise<void> {
@@ -69,10 +89,7 @@ export default class Service {
   }
 
   async dev (): Promise<void> {
-    await this.dotEnv()
-    // console.log(process.env)
     return
-    // console.log('dev')
     const log = (PORT: number): void => {
       console.clear()
       // eslint-disable-next-line no-irregular-whitespace

@@ -18,6 +18,7 @@ program.version(version, '-V --version', '查看当前版本')
 program
   .command('create <projectName>')
   .option('--vue', 'vue模板', false)
+  .option('--react', 'vue模板', false)
   .description('创建项目')
   .helpOption('-h, --help', '查看帮助')
   .action(create)

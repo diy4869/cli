@@ -10,3 +10,9 @@ export * from './lib/outputFiles'
 export {
   assignPackage
 }
+export function getType <T>(str: T): string {
+  const type = Object.prototype.toString.call(str)
+  const substr = type.substring(8, type.length - 1)
+
+  return substr.toLowerCase()
+}

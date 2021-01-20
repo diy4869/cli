@@ -6,7 +6,7 @@
 export default [
   {
     type: 'confirm',
-    name: 'test',
-    message: '测试demo'
+    name: 'useTypescript',
+    message: '是否使用TypeScript'
   }
 ]

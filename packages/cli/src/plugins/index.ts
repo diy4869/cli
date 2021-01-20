@@ -55,8 +55,8 @@ export default class Plugins {
           obj = merge(obj, ...list)
         }
         // 插件所提供的prompt选项，如果存在则合并，并传递给下一个插件
-        if (res.options) {
-          generatorOptions = assign(generatorOptions, res.options)
+        if (res.generatorOptions) {
+          generatorOptions = assign(generatorOptions, res.generatorOptions)
         }
 
         return plugin.apply.call(null, this.api, {

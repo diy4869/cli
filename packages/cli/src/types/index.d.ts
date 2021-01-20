@@ -25,7 +25,7 @@ export interface Options {
 }
 
 export interface ReturnTypes {
-  options?: {
+  generatorOptions?: {
     [key: string]: unknown
   },
   generatorFiles: Files,

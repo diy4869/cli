@@ -5,6 +5,7 @@
  */
 import Plugins from '../../plugins/index'
 import VueTemplate from 'cli-plugin-vue'
+import reactTemplate from 'cli-plugin-react'
 import Generator, { Files } from '../../plugins/generator'
 import { checkDirectory, Delete } from '../../utils'
 import { API } from '@/types'
@@ -38,9 +39,10 @@ export function baseCreate (dir: string, template: Files, projectName: string): 
 
 export default async (projectName: string, program: commander.Command): Promise<void> => {
   const dir = path.resolve(process.cwd(), projectName)
+  console.log()
   if (await checkDirectory(dir)) {
     // return console.log('文件夹已存在')
-    console.log()
+
     const { rewrite } = await inquirer.prompt([
       {
         type: 'confirm',
@@ -66,7 +68,7 @@ export default async (projectName: string, program: commander.Command): Promise<
         name: 'cli-plugin-test',
         apply (api: API) {
           api.configWebpack((config) => {
-            console.log('test', config)
+            // console.log('test', config)
             return {}
           })
           return {
@@ -77,6 +79,16 @@ export default async (projectName: string, program: commander.Command): Promise<
     ]).run()
 
     // return
+    baseCreate(dir, template, projectName)
+  } else if (program.react) {
+    const { template } = await new Plugins([
+      {
+        name: 'cli-plugin-react',
+        apply: reactTemplate
+      }
+    ]).run()
+
+    return
     baseCreate(dir, template, projectName)
   } else {
     console.log('default')

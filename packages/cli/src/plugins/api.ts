@@ -7,9 +7,11 @@ import inquirer = require('inquirer')
 
 export const service = new Service()
 
+export let config
+
 const api: API = {
   configWebpack (fn) {
-    service.configWebpack(fn)
+    config = service.configWebpack(fn)
   },
   render,
   assignPackage,

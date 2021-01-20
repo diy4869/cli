@@ -1,0 +1,21 @@
+{
+  "alwaysStrict": true,
+  "compilerOptions": {
+      "jsx": "react",
+      "baseUrl": ".",
+      "outDir": "dist",
+      "module": "commonjs",
+      "sourceMap": true,
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "paths": {
+          "@/*": [
+              "./src/*"
+          ]
+      }
+  },
+  "exclude": [
+      "node_modules",
+      "dist"
+  ]
+}

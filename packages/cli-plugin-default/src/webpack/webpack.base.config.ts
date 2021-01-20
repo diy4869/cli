@@ -36,15 +36,6 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
           ]
         },
         {
-          test: /\.(sass|scss)$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            'postcss-loader',
-            'sass-loader'
-          ]
-        },
-        {
           test: /\.(jpg|jpeg|webp|gif)$/,
           use: [
             {

@@ -9,8 +9,9 @@ import generatorOptions from './src/config/index'
 import path = require('path')
 
 export default async function baseTemplate (api: API): Promise<ReturnTypes> {
-  // const options = await api.prompt(generatorOptions)
+  const options = await api.prompt(generatorOptions)
   return {
-    generatorFiles: await outputFiles(path.resolve(__dirname, './src/template'))
+    generatorFiles: await outputFiles(path.resolve(__dirname, './src/template')),
+    generatorOptions: options
   }
 }
