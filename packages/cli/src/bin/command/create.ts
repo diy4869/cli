@@ -88,7 +88,7 @@ export default async (projectName: string, program: commander.Command): Promise<
       }
     ]).run()
 
-    return
+    // return
     baseCreate(dir, template, projectName)
   } else {
     console.log('default')

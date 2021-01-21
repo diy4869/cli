@@ -34,20 +34,16 @@ export default class Service {
       fn()
     )
 
+    // this.webpackConfig = merge(this.webpackConfig, this.pluginWebpackConfig as webpack.Configuration)
     this.webpackConfig = this.pluginWebpackConfig.reduce((total, current) => {
       return merge(total, current)
     }, {})
-    // eslint-disable-next-line no-eval
-    const str = JSON.stringify(eval('this.webpackConfig'), null, 2)
-    fs.writeFileSync(
-      path.resolve(`${this.context}/webpack.cache.config.js`),
-      `module.exports = ${str}`
-    )
+
     fn.call(fn, this.webpackConfig)
 
-    global.webpackConfig = this.webpackConfig
+    // global.webpackConfig = this.webpackConfig
 
-    console.log(this.webpackConfig.module.rules)
+    // console.log(this.webpackConfig.module.rules)
     console.log(this.webpackConfig)
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -89,7 +85,7 @@ export default class Service {
   }
 
   async dev (): Promise<void> {
-    return
+    // return
     const log = (PORT: number): void => {
       console.clear()
       // eslint-disable-next-line no-irregular-whitespace

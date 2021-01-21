@@ -5,7 +5,7 @@ import path = require('path')
 import MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 export default async function reactTemplate(api: API, options): Promise<ReturnTypes> {
-  const { useHooks, useCssModule } = await api.prompt(generatorOptions)
+  const { useCssModule } = await api.prompt(generatorOptions)
   const { useTypescript } = options.generatorOptions
 
 
@@ -53,7 +53,7 @@ export default async function reactTemplate(api: API, options): Promise<ReturnTy
                 'postcss-loader',
                 'sass-loader'
               ]
-            },
+            }
           ]
         }
       }
@@ -64,8 +64,8 @@ export default async function reactTemplate(api: API, options): Promise<ReturnTy
 
   // console.log(template)
 
-  return
+  // return
   return {
-    generatorFiles: {}
+    generatorFiles: template
   }
 }

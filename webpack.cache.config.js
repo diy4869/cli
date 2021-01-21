@@ -59,21 +59,7 @@ module.exports = {
       },
       {
         "test": {},
-        "use": [
-          "D:\\private\\cli\\node_modules\\mini-css-extract-plugin\\dist\\loader.js",
-          {
-            "loader": "css-loader",
-            "options": {
-              "esModule": true,
-              "modules": {
-                "localIdentName": "[local]--[hash:5]",
-                "context": "D:\\private\\cli\\packages\\cli-plugin-react\\src"
-              }
-            }
-          },
-          "postcss-loader",
-          "sass-loader"
-        ]
+        "loader": "vue-loader"
       }
     ]
   },
@@ -81,7 +67,7 @@ module.exports = {
     "extensions": [
       ".js",
       ".ts",
-      ".tsx"
+      ".vue"
     ],
     "alias": {
       "@": "D:\\private\\cli\\src",
@@ -144,6 +130,7 @@ module.exports = {
         "template": "D:\\private\\cli\\src\\page\\index.html"
       },
       "version": 5
-    }
+    },
+    {}
   ]
 }

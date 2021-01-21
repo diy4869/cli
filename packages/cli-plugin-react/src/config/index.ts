@@ -6,11 +6,6 @@
 export default [
   {
     type: 'confirm',
-    name: 'useHooks',
-    message: '是否使用hooks'
-  },
-  {
-    type: 'confirm',
     name: 'useCssModule',
     message: '是否使用css module'
   }

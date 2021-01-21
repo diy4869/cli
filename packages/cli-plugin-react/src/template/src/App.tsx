@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import router from './router'
 import logo from './logo.svg'
 import './App.css'
 
@@ -30,6 +32,23 @@ function App() {
           </a>
         </p>
       </header>
+      <main>
+        <Switch>
+          {
+            router.map(item => {
+              return (
+                <Route
+                  exact
+                  path={item.path}
+                  component={item.component}
+                  key={item.path}
+                />
+              )
+            })
+          }
+        </Switch>
+        <Router></Router>
+      </main>
     </div>
   )
 }
