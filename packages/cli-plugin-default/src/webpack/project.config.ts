@@ -1,6 +1,6 @@
 import webpack = require('webpack')
 import WebpackDevServer = require('webpack-dev-server')
-
+import { merge } from 'lodash'
 
 interface PagesConfig {
   filename: string,
@@ -21,24 +21,26 @@ interface TerserOptions {
   dropDebugger?: boolean
 }
 
+export interface Config {
+  publicPath?: string,
+  pages?: PagesInterface,
+  devServer?: WebpackDevServer.Configuration,
+  configWebpack?(config?: webpack.Configuration): webpack.Configuration
+}
 
 export class ProjectConfig {
-  publicPath?: string = ''
-  pages?: PagesInterface
-  devServer?: WebpackDevServer.Configuration = {
-    host: 'localhost',
-    port: 8080,
-    overlay: {
-      warnings: false,
-      errors: true
-    }
+  conf: Config
+  constructor (config: Config) {
+    this.conf = merge({
+      publicPath: '',
+      devServer: {
+        host: 'localhost',
+        port: 8080,
+        overlay: {
+          warnings: false,
+          errors: true
+        }
+      }
+    }, config)
   }
-
-  terserPlugin?: TerserOptions = {
-    parallel: true,
-    dropConsole: true,
-    dropDebugger: true
-  }
-
-  configWebpack?(config?: webpack.Configuration): webpack.Configuration
 }

@@ -11,20 +11,21 @@ import webpack = require('webpack')
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 import MiniCssExtractPlugin = require('mini-css-extract-plugin')
 import TerserPlugin = require('terser-webpack-plugin')
-const userWebpackConfig = () => getProjectConfig()
 
 type WEBPACK_ENV = 'development' | 'production'
 
 const baseDir = process.cwd()
 
-export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
+export default (ENV = 'development'): webpack.Configuration => {
+  const userWebpackConfig = getProjectConfig()
   const config: webpack.Configuration = {
     context: baseDir,
-    mode: ENV || 'development',
-    entry: userWebpackConfig()?.pages ? multiPage.entry() : path.resolve('./src/index.js'),
+    mode: ENV as WEBPACK_ENV,
+    entry: userWebpackConfig?.pages ? multiPage.entry() : path.resolve('./src/index.js'),
     output: {
       path: path.resolve(__dirname, '../dist'),
-      filename: '[name].[fullhash:8].js'
+      filename: '[name].[fullhash:8].js',
+      publicPath: userWebpackConfig.publicPath
     },
     module: {
       rules: [
@@ -118,7 +119,7 @@ export default (ENV?: WEBPACK_ENV): webpack.Configuration => {
     ]
   }
 
-  if (!userWebpackConfig()?.pages) {
+  if (!userWebpackConfig?.pages) {
     config.plugins = [
       ...config.plugins,
       new HtmlWebpackPlugin({

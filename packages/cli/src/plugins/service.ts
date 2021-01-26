@@ -1,4 +1,5 @@
 import baseConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
+import userProjectConfig, { Config } from 'cli-plugin-default/src/webpack/utils/getProjectConfig'
 import { buildMode, report, server, getPort, program } from '../utils'
 import { HOST } from '../config'
 // import { getType } from '@lo_cli/utils'
@@ -11,21 +12,23 @@ import path = require('path')
 import glob = require('glob')
 import dotenvExpand = require('dotenv-expand')
 import fs = require('fs')
-
-declare global {
-  // eslint-disable-next-line no-var
-  var webpackConfig: webpack.Configuration
-}
+import DotenvWebpack = require('dotenv-webpack')
+import FriendlyErrrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 export default class Service {
-  webpackConfig: webpack.Configuration
   pluginWebpackConfig: webpack.Configuration[]
   context: string
+  webpackConfig: webpack.Configuration
+  userProjectConfig: Config
   constructor () {
-    this.webpackConfig = {}
+    this.userProjectConfig = userProjectConfig()
+
     this.pluginWebpackConfig = [
       baseConfig()
     ]
+    this.webpackConfig = {
+      ...baseConfig()
+    }
     this.context = process.cwd()
   }
 
@@ -44,13 +47,13 @@ export default class Service {
     // global.webpackConfig = this.webpackConfig
 
     // console.log(this.webpackConfig.module.rules)
-    console.log(this.webpackConfig)
-
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     // return this.webpackConfig
   }
 
-  async dotEnv (mode = 'development'): Promise<void> {
+  async dotEnv (mode = 'development'): Promise<{
+    [env: string]: number | string
+  }> {
     const loadEnv = (): Promise<{
       [env: string]: string
     }> => {
@@ -73,19 +76,25 @@ export default class Service {
     }
 
     const env = await loadEnv()
-    // 加载基础环境
-    dotenv.config({
-      path: env.env
-    })
-    // 加载${mode}环境
-    dotenv.config({
-      path: env[mode]
-    })
-    dotenvExpand(dotenv)
+    const baseEnv = {
+      env: env.env
+    }
+    baseEnv[mode] = env[mode]
+
+    const result = Object.keys(baseEnv).reduce((total, current) => {
+      const e = dotenv.config({
+        path: env[current]
+      })
+
+      const { parsed } = dotenvExpand(e)
+
+      return Object.assign(total, parsed)
+    }, {})
+
+    return result
   }
 
   async dev (): Promise<void> {
-    // return
     const log = (PORT: number): void => {
       console.clear()
       // eslint-disable-next-line no-irregular-whitespace
@@ -95,42 +104,55 @@ export default class Service {
       console.log(`  - Network: ${chalk.cyan(`http://${address.ip()}:${PORT}`)}`)
       if (program.report) console.log(`  - Report:  ${chalk.cyan('http://127.0.0.1:8888')}`)
     }
+    const env = await this.dotEnv()
 
-    console.log('======', this)
-    const config = merge(this.webpackConfig, {
-      mode: buildMode(program.mode),
-      plugins: [
-        new webpack.HotModuleReplacementPlugin({
-          multiStep: true,
-          fullBuildTimeout: 200
-        })
-        // new FriendlyErrrorsWebpackPlugin({
-        //   compilationSuccessInfo: undefined,
-        //   onErrors (severity, errors) {
-        //     console.log(severity)
-        //     console.log(errors)
-        //     if (severity !== 'error' || severity !== 'warning') {
-        //       return undefined
-        //     } else {
-        //       log(PORT)
-        //     }
-        //   }
-        // })
-      ]
-    })
+    const configList = [
+      this.webpackConfig,
+      {
+        mode: buildMode(program.mode),
+        plugins: [
+          new webpack.HotModuleReplacementPlugin({
+            multiStep: true,
+            fullBuildTimeout: 200
+          }),
+          new webpack.EnvironmentPlugin(Object.keys(env))
+          // new FriendlyErrrorsWebpackPlugin({
+          //   compilationSuccessInfo: undefined
+          //   onErrors (severity, errors) {
+          //     console.log(severity)
+          //     console.log(errors)
+          //     if (severity !== 'error' || severity !== 'warning') {
+          //       return undefined
+          //     } else {
+          //       log(PORT)
+          //     }
+          //   }
+          // })
+        ]
+      }
+    ]
 
+    if (this.userProjectConfig?.configWebpack()) {
+      configList.push(this.userProjectConfig?.configWebpack())
+    }
+    const config = merge(configList)
+
+    this.userProjectConfig?.configWebpack?.call(this, config)
     if (program.report) report(config, program.report)
-    const userWebpack = config
-    const compiler = webpack(userWebpack)
-    const devServer = server(compiler)
-    const PORT = await getPort()
+
+    const compiler = webpack(config)
+    const PORT = await getPort(this?.userProjectConfig?.devServer?.port)
+    const devServer = server(
+      compiler,
+      this?.userProjectConfig?.devServer?.port,
+      this?.userProjectConfig?.devServer)
+
     // compiler.hooks.done.tap('cli-service dev', () => {
     //   // console.log('产生了新的编译')
     //   log(PORT)
     // })
     await (await devServer).listen(PORT, HOST, err => {
       if (err) return console.log(err)
-      // log(PORT)
     })
   }
 

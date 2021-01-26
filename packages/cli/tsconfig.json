@@ -3,6 +3,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "dist",
+        "target": "ES6",
         "module": "commonjs",
         "sourceMap": true,
         "moduleResolution": "node",

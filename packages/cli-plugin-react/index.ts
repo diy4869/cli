@@ -16,7 +16,7 @@ export default async function reactTemplate(api: API, options): Promise<ReturnTy
       'react-router-dom': '5.2.0'
     }
   })
-  api.configWebpack(config => {
+  api.configWebpack(() => {
     return {
       resolve: {
         extensions: useTypescript ? ['.tsx'] : ['.jsx']
@@ -32,7 +32,7 @@ export default async function reactTemplate(api: API, options): Promise<ReturnTy
     })
   }
   if (useCssModule) {
-    api.configWebpack(config => {
+    api.configWebpack(() => {
       return {
         module: {
           rules: [
