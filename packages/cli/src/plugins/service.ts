@@ -2,6 +2,7 @@ import baseConfig from 'cli-plugin-default/src/webpack/webpack.base.config'
 import userProjectConfig, { Config } from 'cli-plugin-default/src/webpack/utils/getProjectConfig'
 import { buildMode, report, server, getPort, program } from '../utils'
 import { HOST } from '../config'
+import Test from './pluginApi'
 // import { getType } from '@lo_cli/utils'
 import merge from 'webpack-merge'
 import webpack = require('webpack')
@@ -11,16 +12,15 @@ import dotenv = require('dotenv')
 import path = require('path')
 import glob = require('glob')
 import dotenvExpand = require('dotenv-expand')
-import fs = require('fs')
-import DotenvWebpack = require('dotenv-webpack')
 import FriendlyErrrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
-export default class Service {
+export default class Service extends Test {
   pluginWebpackConfig: webpack.Configuration[]
   context: string
   webpackConfig: webpack.Configuration
   userProjectConfig: Config
   constructor () {
+    super()
     this.userProjectConfig = userProjectConfig()
 
     this.pluginWebpackConfig = [
@@ -39,16 +39,11 @@ export default class Service {
 
     // this.webpackConfig = merge(this.webpackConfig, this.pluginWebpackConfig as webpack.Configuration)
     this.webpackConfig = this.pluginWebpackConfig.reduce((total, current) => {
+      this.addWebpack(current)
       return merge(total, current)
     }, {})
 
     fn.call(fn, this.webpackConfig)
-
-    // global.webpackConfig = this.webpackConfig
-
-    // console.log(this.webpackConfig.module.rules)
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    // return this.webpackConfig
   }
 
   async dotEnv (mode = 'development'): Promise<{
@@ -104,8 +99,10 @@ export default class Service {
       console.log(`  - Network: ${chalk.cyan(`http://${address.ip()}:${PORT}`)}`)
       if (program.report) console.log(`  - Report:  ${chalk.cyan('http://127.0.0.1:8888')}`)
     }
+    console.log(this)
+    // console.log(this.testApi.config)
+    process.exit()
     const env = await this.dotEnv()
-
     const configList = [
       this.webpackConfig,
       {

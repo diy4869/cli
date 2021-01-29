@@ -17,6 +17,10 @@ export interface API {
   prompt: (list: inquirer.QuestionCollection<unknown>) => Promise<any> & { ui: any }
 }
 
+export {
+  Files
+}
+
 export interface Options {
   generatorFiles: Files
   generatorOptions: {

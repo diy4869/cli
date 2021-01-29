@@ -24,8 +24,8 @@ export default (ENV = 'development'): webpack.Configuration => {
     entry: userWebpackConfig?.pages ? multiPage.entry() : path.resolve('./src/index.js'),
     output: {
       path: path.resolve(__dirname, '../dist'),
-      filename: '[name].[fullhash:8].js',
-      publicPath: userWebpackConfig.publicPath
+      filename: '[name].[contentHash:8].js',
+      publicPath: userWebpackConfig?.publicPath || ''
     },
     module: {
       rules: [

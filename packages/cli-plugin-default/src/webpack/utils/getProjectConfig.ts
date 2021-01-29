@@ -12,11 +12,17 @@ export {
 }
 
 export default function test (): Config {
+  try {
     const projectConfigPath = path.resolve(process.cwd(), './project.config.ts')
+    const stat = fs.statSync(projectConfigPath)
 
-    // const stat = fs.statSync(projectConfigPath)
+    if (stat) {
+      const ProjectConfig = require(projectConfigPath).default
 
-    const ProjectConfig = require(projectConfigPath).default
+      return ProjectConfig.conf
+    }
+  } catch (err) {
+    // console.log(err)
+  }
 
-    return ProjectConfig.conf
 }
